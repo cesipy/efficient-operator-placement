@@ -1,24 +1,19 @@
 \documentclass{article}
 
-% Language setting
-% Replace `english' with e.g. `spanish' to change the document language
-% \usepackage[english]{babel}
-
-% Set page size and margins
-% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[german]{babel}
 \usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
-
-% Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
 \bibliographystyle{plain}
 
 
 \begin{document}
 \begin{titlepage}
       \begin{center}
-          % University name
           \Huge
           \text{Universit\"at Innsbruck} \\
           \vspace{1cm} % Add some vertical space
@@ -26,13 +21,11 @@
           Institut f\"ur Informatik \\
           \vspace{1cm}
           \includegraphics[width=7cm]{universitaet-innsbruck-logo-cmyk-farbe.jpg}
-          
-          % Title
+
           \Huge
           \textbf{Heuristische Optimierung der Operatorplatzierung in verteilten Stream-Verarbeitungssystemen} \\
           \vspace{3cm} % Add more vertical space
-          
-          % Author and Institute
+
           \Large
           Cedric Immanuel Sillaber \\
           Matrikel-Nr: 12211124
@@ -44,9 +37,8 @@
           \normalsize
           Betreuer:\\ Prof. Dipl.-Ing. Dr. Thomas Fahringer
           
-          \vfill % Fill the rest of the page with whitespace
+          \vfill 
           
-          % Date
           \large
           \today
       \end{center}
@@ -75,16 +67,23 @@ In solch einem System stehen zahlreiche Ressourcen zur Verfügung.
 Als Operatorplatzierung bezeichnet man das Problem, 
 die Operatoren im System optimal auf verfügbare Knoten zu platzieren.
 Für die Evaluation solcher Modelle werden diverse Quality-of-Service Attribute herangezogen. 
-Dazu gehören Durchsatz, End-zu-End Latenz und Verfügbarkeit \cite{k3} \cite{k4}.  Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS Attribute 
+Dazu gehören Durchsatz, End-zu-End Latenz und Verfügbarkeit \cite{k3} \cite{cardellini-optimal_operatorplc}.  Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS Attribute 
 zu fokusieren, die einfach angepasst werden können \cite{k3}.
 Diese Arbeit fokusiert sich auf einen Ansatz, der bekannte Heurisiken kombiniert und optimale Lösungen effizient approximiert. Der Ansatz bezieht sich auf keine spezifische
 Implementierung und ist somit modell-frei. Somit kann diese Lösung für verschiedene Systeme angewendet werden.
 
-Die optimale systematische Position in solch einem System stellt einen maßgeblichen Performancefaktor dar. Die Lösung dieses Problems ist jedoch NP-hard \cite{k4}.
-
-
+Die optimale systematische Position in solch einem System stellt einen maßgeblichen Performancefaktor dar. Die Lösung dieses Problems ist jedoch NP-hard \cite{cardellini-optimal_operatorplc}.
 
 \section{Definitionen}
+Um eine konkrete Optimierung des Problems beschreiben zu können, ist es notwending die Problematik formal zu formulieren. 
+Im folgenden Kapitel %oder section??
+wird eine formale Abstraktion des Operatorplatzierungproblems vorgestellt. Zuerst wird das Datenstrom- 
+und das Ressourcenmodell \ref{SVS-Definition} defininiert. Beide Modelle werden mittels Graphentheorie formuliert und beschreiben 
+ein SVS. 
+Folglich wird das Problem der Operatorplatzierung mithilfe der zuvor definierten Modelle formuliert \ref{OPP-Definition}. 
+
+
+\subsection{Definition von verteilten Streamdatenverarbeitungssystemen}  \label{SVS-Definition}  % evt "formale definition ..."
 %In diesem Abschnitt werden die Grundlagen verteilter Stream-Verarbeitungssysteme eingegangen. Wir geben eine formale Darstellung SVSs und geben eine Definition für das Operatorplatzierungs Problem. Zu 
 SVSs basieren auf einer Menge an verteilten Computer Ressourcen, die zusammen ein komplexes System ergeben. 
 Dieser Sachverhalt kann mittels Graphentheorie beschrieben werden. Grundsätzlich gibt es zwei Abstraktionen solcher Systeme. 
@@ -102,6 +101,12 @@ Dabei wird der logische Zusammenschluss zwischen verfügbaren Computing Ressourc
 repräsentiert solch eine Ressource. In diesem Modell beschreiben Kanten $(u,v) \in E_{res}$ 
 eine logische Verknüpfung zwischen dem Rechnerressourcen $u$ und $v$.
 
+% zusätzlich pinned operators
+% vielleicht Fig. 1 aus efficient operator placement hinzufügen?.
+
+\subsection{Definition von Operatorplatzierungproblem} \label{OPP-Definition}
+Ein Operator kann aus politischen, sicherheitsbezüglichen oder topologichen Gründen \cite{cardellini-optimal_operatorplc} nicht auf jedem Knoten 
+$i \in V_{svs}$ im Datenstrommodell platziert werden. 
 Für jeden Operator $i \in V_{svs}$ gibt es eine Menge an Kandidatressourcen $V_{res}^i$ (Schreibweise wie in \cite{k3}).
 
 Das Operator Problem bezeichnet eine Abbildung zwischen den genannten Modellen. Die Abbildung wird eingeschränkt,
@@ -110,54 +115,166 @@ gesucht, damit Operator $i$ auf Knoten $u$ platziert wird.
 Hierbei bezieht sich das Problem auf die Inkonsistenz zwischen 
 logisch benachbarten Operatoren im Ressourcen Modell $G_{res}$ und optimalen Entscheidungen der Operatoren im Datenstrom Modell $G_{svs}$.
 
-% zusätzlich pinned operators
-% vielleicht Fig. 1 aus efficient operator placement hinzufügen?.
-
-\section{Definition von Operatorplatzierungproblem}
 Um das Problem formal zu definieren, verwenden wir den binären Ausdruck $x_{i,u}$ $i \in V_{svs}, u \in V_{res}: x_{i,u} = 1$ wenn Operator $i$
 auf dem Rechner $u$ platziert wird, andernfalls $x_{i,u} = 0$
 
 \[ 
     \begin{gathered}
+        \operatorname*{arg\,min}_\theta F(x) \\
         \sum_{i \in V_{svs}} C_i x_{i,u} < C_u \quad \forall u \in V_{res} \\ % constrain: node resource
         \sum_{u \in V_{res}^i} x_{i,u} = 1 \quad \forall i \in V_{dsp} \\ % constrain: node only placed on candidate resources
         x_{i,u} \in \{0,1\} \quad \forall i \in V_{svs}, u \in V_{res}^i
     \end{gathered}
 \] 
 
-Mithilfe einer *penalty function* werden die  Verbindungen zwischen zwei spezifischen Knoten bezüglich der QoS Attribute bewertet. Dadruch wird ein Vergleich 
+Hierbei wird die Funktion $F(x)$ bezüglich ausgewählten QoS minimiert. Dieses multi-objective Optimierungsproblem wird durch 
+Simple Additive Weight technique \cite{yoon-multiple-optimization} zu einem single-objective Problem umgewandelt.
+Für typische QoS Attribute wie Antwortzeit, Verfügbarkeit und Netzwerkverwendung \cite{k3} wird die Funktion $F(x)$ wie folgt defininiert:
+\[ 
+    \begin{gathered}
+        F(x) = w_r \frac{R(x) - R_{min}}{R_{max} - R_{min}} 
+        + w_a \frac{log A_{max} - log A(x)}{log A_{max} - log A_{min}} 
+        + w_z \frac{Z(x) - Z_{min}}{Z_max - Z_min} 
+    \end{gathered}  \label{to-miminize-function}
+\] 
+wo $R(x)$, $A(x)$ und $Z(x)$ die QoS Attribute und $w_r, w_a, w_z \geq 0$ Gewichtungen sind. $R_{min}$, $R_{max}$, $A_{min}$, $A_{max}$, $Z_{min}$ und $Z_{max}$ sind die minimalen und maximalen Werte der QoS Attribute.
+$w_r + w_a + w_z = 1$
+
+
+%QoS: pplication response time Rx, the application availability A(x), and the network usage Z(x).
+
+
+Mithilfe einer \textbf{penalty function} werden die  Verbindungen zwischen zwei spezifischen Knoten bezüglich der QoS Attribute bewertet. Dadruch wird ein Vergleich 
 der Rechnerressourcen möglich. Dabei werden die Links zwischen $u \in V_{res}^i$ möglich. Auf die penalty function wird im folgenden eingegangen.
 
-\section{Penalty Function}
+
+
+
+\section{Heuristiken}
+% erwähnen dass es sich um ein model free characteristic handelt
+Wie in \cite{cardellini-optimal_operatorplc} gezeigt, ist das 
+Operatorplatzierungproblem NP-hard.
+Da die initiale Platzierung der Operatoren eine tragender Faktor
+in der Performance einnimmt, werden effiziente Heuristiken benötigt. 
+In dieser Abreit wird eine effiziente Methode vorgestellt, die 
+zu einer approximierten Optimalösung führt. 
+Dieser Ansatz beinhaltet eine Kombination mehrere bekannter Heuristiken, die die Funktion $F$ aus \ref{to-miminize-function} minimieren.  
+Ein Greedy First-Fit Ansatz in Kombination mit einer lokalen Suche findet meist lokale Optima. 
+Um dem entgegenzuwirken wird dieser Ansatz mit einer Tabu Search verbunden. 
+Somit werden häufiger \cite{k3} globale Optima gefunden. 
+
+Ein Greedy First-Fit Algorithmus wird für das Bin-packing Packing Problem verwenden, 
+aber auch oft für das Operator Placement Problem \cite{k7}\cite{k8}.
+Da diese Heuristik meist nur lokale Optima findet, werden andere Ansätze hinzugezogen. 
+Zum einen wird Local-Search verwendet, ein Verfahren, 
+das mit einem Greedy Ansatz über einen Teil der Funktion iteriert. Da auch dieses
+Verfahren dazu neigt, lokale Optima auszuwählen, wird zusätzlich Tabu Search implementiert. 
+Die drei Heuristiken werden gekonnt kombiniert und führen somit zu einer besseren Approximation. 
+
+\subsection{Penalty Function} 
 % penalty function ist für Links, nicht für knoten!
 Die Auswahl von verschiedenen Möglichkeiten $u \in V_{res}^i$ bringt Einbussen mit sich. Diverse Ressourcen haben verschiedene Lokalitäten,
 deren Performance durch Netzwerkdynamiken beeinflusst wird. Da die Daten übertragen werden müssen, kommen nicht vorhersehbare Network Delays dazu. Hierzu müssen Network Delay, 
 Bandbreite und Netzwerkgeschwindigkeit\cite{k3} betrachtet werden.
 
 
+\subsection{Greedy First Fit}
+Diese Heuristik wird  für das Bin-Packing Problem verwendet, um eine optimale Lösung anzunähern \cite{greedy-first-fit}. 
+Für jeden Operator werden die verfügbaren Ressourcen $v \in V_{res}$ in einer Liste sortiert. Die Sortierung basiert auf der summierte penalty function $\delta$
+zwischen $v$ und den angepinnten Operatore $P$. Folglich:
 
-\subsection{Heuristiken}
-Wie in \cite{k4} gezeigt, ist das Operatorplatzierungproblem NP-hard. Da die initiale Platzierung der Operatoren eine tragender Faktor
-in der Performance einnimmt, werden effiziente Heuristiken benötigt. In dieser Abreit wird eine effiziente Methode vorgestellt, die 
-zu einer approximierten Optimalösung führt. Dieser Ansatz beinhaltet eine Kombination mehrere bekannter Heuristiken. 
-Ein Greedy First-Fit Ansatz in Kombination mit einer lokalen Suche findet meist lokale Optima. 
-Um dem entgegenzuwirken wird dieser Ansatz mit einer Tabu Search verbunden. Somit werden häufiger \cite{k3} globale Optima gefunden. 
+\[ 
+    \begin{gathered}
+        u_i \in P \text{, wobei P = angepinnten Operatoren} \\
+        \sum_{i=0}^{|P|} \delta(v, u)
+    \end{gathered} 
+\] 
 
-Ein Greedy First-Fit Algorithmus wird für das Bin-packing Packing Problem verwenden, 
-aber auch oft für das Operator Placement Problem \cite{k7}\cite{k8}.
-Da diese Heuristik meist nur lokale Optima findet, werden andere Ansätze hinzugezogen. 
-Zum einen wird Local-Search verwendet, ein Verfahren, das mit einem Greedy Ansatz über einen Teil der Funktion iteriert. Da auch dieses
-Verfahren dazu neigt, lokale Optima auszuwählen, wird zusätzlich Tabu Search implementiert. 
-Die drei Heuristiken werden gekonnt kombiniert und führen somit zu einer besseren Approximation. 
-
-
+Ausgewählt wird der erste Rechner in der Liste, der den Operator aufnehmen kann. 
+Mittels Breitensuche werden für alle Operatoren Plazierungen bestimmt. Die daraus resultierenden Operatorplatzierungen werden als eine Konfiguration bezeichnet. 
 
 
 
+\subsection{Local Search}
+Local Search iteriert über die aus der Greedy First Fit Heuristik resultierenden Konfigurationen, um somit optimalere Lösungen zu finden. 
 
 
-%\bibliographystyle{alpha}
-%\bibliography{sample}
+% TODO: übersetzen auf deutsch
+\begin{minipage}{0.5\textwidth}
+    \begin{algorithm}[H]
+        \caption{Local Search}
+        \begin{algorithmic}
+            \STATE \textbf{function} $\mathrm{localSearch}(G_{dsp}, G_{res})$
+            \STATE \textbf{Input}: $G_{\text{dsp}}$, DSP application graph
+            \STATE \textbf{Input}: $G_{\text{res}}$, computing resource graph
+            \STATE $P \leftarrow$ resources hosting the pinned operators of $G_{\text{dsp}}$
+            \STATE $L \leftarrow$ resources of $G_{\text{res}}$, 
+            sorted by the cumulative link penalty with respect to nodes in $P$
+            \STATE link penalty with respect to nodes in $P$
+            \STATE $S \leftarrow$  solve GreedyFirstFit($G_{\text{dsp}}$, $L$)
+            \STATE \textbf{do}
+    
+            \STATE \hspace{\algorithmicindent} $F \leftarrow$  value of the objective function for $S$
+            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by colocating operators
+            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by swapping resources
+            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by relocating a single operator
+            \STATE \hspace{\algorithmicindent} $F' \leftarrow$ value of the objective function for S
+    
+            \STATE \textbf{while} $F'  < F$ \textbf{do}
+            \STATE \hspace{\algorithmicindent} \textbf{return} $S$
+            \STATE \textbf{end function}
+        \end{algorithmic}
+\end{algorithm}
+\end{minipage}
+    \begin{minipage}{0.5\textwidth}
+    Bla Bla Bla
+\end{minipage}
+
+\subsection{Tabu Search}
+
+\begin{minipage}{0.5\textwidth}
+
+\begin{algorithm}[H]
+    \caption{Tabu Search}
+    \begin{algorithmic}
+        \STATE \textbf{function} $\mathrm{tabuSearch}(G_{dsp}, G_{res})$
+        \STATE \textbf{Input}: $G_{\text{dsp}}$, DSP application graph
+        \STATE \textbf{Input}: $G_{\text{res}}$, computing resource graph
+
+        \STATE $S^* \leftarrow NOT_DEFINED$
+        \STATE $F^* \leftarrow \infty$
+        \STATE $S' \leftarrow \text{localSearch}(G_{dsp}, G_{res})$   //local optimum
+        \STATE $F' \leftarrow$ objective function value for $S'$
+        \STATE $S  \leftarrow S'$
+        \STATE $tabuList \leftarrow$ create new tabu list and append $S$
+        \STATE \textbf{do}
+
+        \STATE \hspace{\algorithmicindent} improvement $\leftarrow false$
+        \STATE \hspace{\algorithmicindent} $S \leftarrow$  local search for $S$, excluding solutions in $tabuList$
+        \STATE \hspace{\algorithmicindent} \textbf{if} $F = F^*$ \textbf{and} $S \notin tabuList$ \textbf{then} $tabuList$.append($S$) 
+        \STATE \hspace{\algorithmicindent} \textbf{end if}
+
+        \STATE \hspace{\algorithmicindent} \textbf{if} $F < F^*$ \textbf{and} $S \notin tabuList$ \textbf{then} 
+        \STATE \hspace{\algorithmicindent} \hspace{\algorithmicindent} $S^* \leftarrow S; F^* \leftarrow F$
+        \STATE \hspace{\algorithmicindent} \hspace{\algorithmicindent} $tabuList$.append($S$)
+        \STATE \hspace{\algorithmicindent} \hspace{\algorithmicindent} improvement $\leftarrow true$
+
+        \STATE \hspace{\algorithmicindent} \textbf{end if}
+        \STATE \hspace{\algorithmicindent} limit $tabuList$ to the latest $tabuList_{max}$ placement configurations
+        \STATE \textbf{while} improvement
+        \STATE \textbf{if} $F' < F^*$ \textbf{then} $S^* \leftarrow S'$ \textbf{end if}
+        \STATE \textbf{return} $S^*$
+
+    \end{algorithmic}
+\end{algorithm}
+
+\end{minipage}  
+\begin{minipage}{0.5\textwidth}
+    Bla Bla Bla
+\end{minipage}
+
+
+
 \bibliography{biblio}
 
 \end{document}
