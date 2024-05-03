@@ -1,0 +1,163 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+% \usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\bibliographystyle{plain}
+
+
+\begin{document}
+\begin{titlepage}
+      \begin{center}
+          % University name
+          \Huge
+          \text{Universit\"at Innsbruck} \\
+          \vspace{1cm} % Add some vertical space
+          \Large
+          Institut f\"ur Informatik \\
+          \vspace{1cm}
+          \includegraphics[width=7cm]{universitaet-innsbruck-logo-cmyk-farbe.jpg}
+          
+          % Title
+          \Huge
+          \textbf{Heuristische Optimierung der Operatorplatzierung in verteilten Stream-Verarbeitungssystemen} \\
+          \vspace{3cm} % Add more vertical space
+          
+          % Author and Institute
+          \Large
+          Cedric Immanuel Sillaber \\
+          Matrikel-Nr: 12211124
+          
+          \vspace{1cm}
+          \large
+          VU Einführung ins Wissenschaftliche Arbeiten \\
+          \vspace{4cm}
+          \normalsize
+          Betreuer:\\ Prof. Dipl.-Ing. Dr. Thomas Fahringer
+          
+          \vfill % Fill the rest of the page with whitespace
+          
+          % Date
+          \large
+          \today
+      \end{center}
+  \end{titlepage}
+\begin{abstract}
+In den vergangenen Jahren wurden Big Data Applikationen stets populärer. 
+Da die Anzahl der Daten umfangreicher wird, werden effiziente Ansätze für 
+verteilte Stream-Datenverarbeitung (SVS) benötigt.
+Das Problem der Operatorplatzierung ist ein entscheidender Performancefaktor. 
+Für das Lösen dieses Problems gibt es jedoch keine 
+effiziente Lösung. Diese Arbeit beschäftigt sich mit einer effizienten heuristischen Methode, die versucht,
+die optimale Lösung zu approximieren. 
+\end{abstract}
+
+\section{Einführung}
+Im Zuge der fortschreitenden Digitalisierung entwickelte sich Datenverarbeitung zu einem zentralen Aspekt der Modernität.
+Der Erfolg vieler Konzerne beruht auf der Expertise, wie kontinuierliche Datenmengen effizient verarbeitet werden.
+Rund um die Uhr werden Daten gesammelt, die in Echtzeit verarbeitet werden müssen. 
+SVSs wie (zitat nötig) sammeln, filtern und verarbeiten Daten. Die Daten werden von einer großen Menge an 
+Geräten produziert. Derartige Systeme werden beispielsweise in der Analyse von Finanzmärkten \cite{k5}, 
+Verabreitung von Sozialen Netzwerk-Interaktionen und der Beobachtung von Network-Traffic \cite{k5} 
+eingesetzt. Ein SVS besteht aus einer Menge von unabhängigen Operatoren, die eine spezifische
+Funktionalität ausführen. Aus der Unabhängigkeit der Operatoren lässt sich die Möglichkeit folgern, 
+dass die Rechner im Netzwerk (Cloud-Edge \cite{k6}) lokalisiert sind, anstatt in der Cloud.
+In solch einem System stehen zahlreiche Ressourcen zur Verfügung. 
+Als Operatorplatzierung bezeichnet man das Problem, 
+die Operatoren im System optimal auf verfügbare Knoten zu platzieren.
+Für die Evaluation solcher Modelle werden diverse Quality-of-Service Attribute herangezogen. 
+Dazu gehören Durchsatz, End-zu-End Latenz und Verfügbarkeit \cite{k3} \cite{k4}.  Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS Attribute 
+zu fokusieren, die einfach angepasst werden können \cite{k3}.
+Diese Arbeit fokusiert sich auf einen Ansatz, der bekannte Heurisiken kombiniert und optimale Lösungen effizient approximiert. Der Ansatz bezieht sich auf keine spezifische
+Implementierung und ist somit modell-frei. Somit kann diese Lösung für verschiedene Systeme angewendet werden.
+
+Die optimale systematische Position in solch einem System stellt einen maßgeblichen Performancefaktor dar. Die Lösung dieses Problems ist jedoch NP-hard \cite{k4}.
+
+
+
+\section{Definitionen}
+%In diesem Abschnitt werden die Grundlagen verteilter Stream-Verarbeitungssysteme eingegangen. Wir geben eine formale Darstellung SVSs und geben eine Definition für das Operatorplatzierungs Problem. Zu 
+SVSs basieren auf einer Menge an verteilten Computer Ressourcen, die zusammen ein komplexes System ergeben. 
+Dieser Sachverhalt kann mittels Graphentheorie beschrieben werden. Grundsätzlich gibt es zwei Abstraktionen solcher Systeme. 
+Erstens das Datenstrom Modell und zweitens das Ressourcen Modell. 
+Beide Systeme werden mit gerichteten, gewichteten zykelfreien Graphen $G = (V,E)$ dargestellt. 
+
+\textit{Datenstrom Modelle} werden durch $G_{svs} = (V_{svs}, E_{svs})$ beschrieben. In diesem Modell beschreiben Knoten $u \in V_{svs}$ Operatoren im System. 
+Zusätzlich sind in $V_{svs}$ Datenquellen und Datenbecken enthalten. Man spricht hierbei von Datenbecken (vgl. "sink"), ein Punkt, an dem die Berechnungen der Operatoren zusammekommen. 
+Zu den Operatoren gehören auch sogenannte \textit{pinned} Operatoren \cite{k3}, 
+die Datenquellen und -becken beinhalten. Kanten $(u,v) \in E_{svs}$ beschreiben Datenstreams 
+zwischen den Operatoren $u$ und $v$.  Ein Stream ist ein kontinuierliche Sequenz von Daten. 
+
+\textit{Ressourcen Modelle} werden durch den Graphen $G_{res} = (V_{res}, E_{res})$ dargestellt. 
+Dabei wird der logische Zusammenschluss zwischen verfügbaren Computing Ressourcen beschrieben. Der Knoten $u \in V_{res}$ 
+repräsentiert solch eine Ressource. In diesem Modell beschreiben Kanten $(u,v) \in E_{res}$ 
+eine logische Verknüpfung zwischen dem Rechnerressourcen $u$ und $v$.
+
+Für jeden Operator $i \in V_{svs}$ gibt es eine Menge an Kandidatressourcen $V_{res}^i$ (Schreibweise wie in \cite{k3}).
+
+Das Operator Problem bezeichnet eine Abbildung zwischen den genannten Modellen. Die Abbildung wird eingeschränkt,
+damit die zu minimierenden QuS Attribute eingeschränkt werden. Folglich wird der optimale Kandidat $u$ in den Kandidatenressourcen $V_{res}^i$
+gesucht, damit Operator $i$ auf Knoten $u$ platziert wird.
+Hierbei bezieht sich das Problem auf die Inkonsistenz zwischen 
+logisch benachbarten Operatoren im Ressourcen Modell $G_{res}$ und optimalen Entscheidungen der Operatoren im Datenstrom Modell $G_{svs}$.
+
+% zusätzlich pinned operators
+% vielleicht Fig. 1 aus efficient operator placement hinzufügen?.
+
+\section{Definition von Operatorplatzierungproblem}
+Um das Problem formal zu definieren, verwenden wir den binären Ausdruck $x_{i,u}$ $i \in V_{svs}, u \in V_{res}: x_{i,u} = 1$ wenn Operator $i$
+auf dem Rechner $u$ platziert wird, andernfalls $x_{i,u} = 0$
+
+\[ 
+    \begin{gathered}
+        \sum_{i \in V_{svs}} C_i x_{i,u} < C_u \quad \forall u \in V_{res} \\ % constrain: node resource
+        \sum_{u \in V_{res}^i} x_{i,u} = 1 \quad \forall i \in V_{dsp} \\ % constrain: node only placed on candidate resources
+        x_{i,u} \in \{0,1\} \quad \forall i \in V_{svs}, u \in V_{res}^i
+    \end{gathered}
+\] 
+
+Mithilfe einer *penalty function* werden die  Verbindungen zwischen zwei spezifischen Knoten bezüglich der QoS Attribute bewertet. Dadruch wird ein Vergleich 
+der Rechnerressourcen möglich. Dabei werden die Links zwischen $u \in V_{res}^i$ möglich. Auf die penalty function wird im folgenden eingegangen.
+
+\section{Penalty Function}
+% penalty function ist für Links, nicht für knoten!
+Die Auswahl von verschiedenen Möglichkeiten $u \in V_{res}^i$ bringt Einbussen mit sich. Diverse Ressourcen haben verschiedene Lokalitäten,
+deren Performance durch Netzwerkdynamiken beeinflusst wird. Da die Daten übertragen werden müssen, kommen nicht vorhersehbare Network Delays dazu. Hierzu müssen Network Delay, 
+Bandbreite und Netzwerkgeschwindigkeit\cite{k3} betrachtet werden.
+
+
+
+\subsection{Heuristiken}
+Wie in \cite{k4} gezeigt, ist das Operatorplatzierungproblem NP-hard. Da die initiale Platzierung der Operatoren eine tragender Faktor
+in der Performance einnimmt, werden effiziente Heuristiken benötigt. In dieser Abreit wird eine effiziente Methode vorgestellt, die 
+zu einer approximierten Optimalösung führt. Dieser Ansatz beinhaltet eine Kombination mehrere bekannter Heuristiken. 
+Ein Greedy First-Fit Ansatz in Kombination mit einer lokalen Suche findet meist lokale Optima. 
+Um dem entgegenzuwirken wird dieser Ansatz mit einer Tabu Search verbunden. Somit werden häufiger \cite{k3} globale Optima gefunden. 
+
+Ein Greedy First-Fit Algorithmus wird für das Bin-packing Packing Problem verwenden, 
+aber auch oft für das Operator Placement Problem \cite{k7}\cite{k8}.
+Da diese Heuristik meist nur lokale Optima findet, werden andere Ansätze hinzugezogen. 
+Zum einen wird Local-Search verwendet, ein Verfahren, das mit einem Greedy Ansatz über einen Teil der Funktion iteriert. Da auch dieses
+Verfahren dazu neigt, lokale Optima auszuwählen, wird zusätzlich Tabu Search implementiert. 
+Die drei Heuristiken werden gekonnt kombiniert und führen somit zu einer besseren Approximation. 
+
+
+
+
+
+
+
+%\bibliographystyle{alpha}
+%\bibliography{sample}
+\bibliography{biblio}
+
+\end{document}
