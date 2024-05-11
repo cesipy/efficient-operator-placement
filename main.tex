@@ -101,7 +101,7 @@ Dabei wird der logische Zusammenschluss zwischen verfügbaren Computing Ressourc
 repräsentiert solch eine Ressource. In diesem Modell beschreiben Kanten $(u,v) \in E_{res}$ 
 eine logische Verknüpfung zwischen dem Rechnerressourcen $u$ und $v$.
 
-% zusätzlich pinned operators
+\subsubsection{Angepinnte Operatoren}
 % vielleicht Fig. 1 aus efficient operator placement hinzufügen?.
 
 \subsection{Definition von Operatorplatzierungproblem} \label{OPP-Definition}
@@ -178,7 +178,7 @@ deren Performance durch Netzwerkdynamiken beeinflusst wird. Da die Daten übertr
 Bandbreite und Netzwerkgeschwindigkeit\cite{k3} betrachtet werden.
 
 
-\subsection{Greedy First Fit}
+\subsection{Greedy First Fit} \label{greedy-first-fit}
 Diese Heuristik wird  für das Bin-Packing Problem verwendet, um eine optimale Lösung anzunähern \cite{greedy-first-fit}. 
 Für jeden Operator werden die verfügbaren Ressourcen $v \in V_{res}$ in einer Liste sortiert. Die Sortierung basiert auf der summierte penalty function $\delta$
 zwischen $v$ und den angepinnten Operatore $P$. Folglich:
@@ -192,15 +192,20 @@ zwischen $v$ und den angepinnten Operatore $P$. Folglich:
 
 Ausgewählt wird der erste Rechner in der Liste, der den Operator aufnehmen kann. 
 Mittels Breitensuche werden für alle Operatoren Plazierungen bestimmt. Die daraus resultierenden Operatorplatzierungen werden als eine Konfiguration bezeichnet. 
+Diese Heuristik 
 
 
 
-\subsection{Local Search}
-Local Search iteriert über die aus der Greedy First Fit Heuristik resultierenden Konfigurationen, um somit optimalere Lösungen zu finden. 
+\subsection{Local Search} \label{local-search}
+Die lokale Suche iteriert über die Konfigurationen, die aus der Greedy First Fit Heuristik resultieren, um eine bessere Lösung zu finden. Der Algorithmus dafür wird im Algorithmus 1 \ref{local-search-algo} gezeigt. 
+Dieser Algorithmus durchläuft drei Schritte: Zunächst wird eine initiale Konfiguration durch den Greedy First Fit berechnet.
+ Anschließend wird eine Nachbarschaft von ähnlichen Konfigurationen bestimmt, und schließlich wird die beste Lösung in dieser Nachbarschaft gefunden. 
+ Um die Nachbarschaft zu bestimmen, wird zunächst eine sortierte Liste $L$ erstellt, basierend auf der penalty function $\delta$ wie in \ref{greedy-first-fit}.
+  Mit dieser Liste wird dann eine initiale Konfiguration $S$ durch den Greedy First Fit Algorithmus erstellt (Zeile 6).
 
 
 % TODO: übersetzen auf deutsch
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.5\textwidth} \label{local-search-algo}
     \begin{algorithm}[H]
         \caption{Local Search}
         \begin{algorithmic}
@@ -227,10 +232,21 @@ Local Search iteriert über die aus der Greedy First Fit Heuristik resultierende
 \end{algorithm}
 \end{minipage}
     \begin{minipage}{0.5\textwidth}
-    Bla Bla Bla
+    \vspace{10pt}
+    Solange bessere Platzierungen der Operatoren gefunden werden, iteriert die lokale Suche über die Konfigurationen  (Zeile (insert)). 
+    Eine Verbesserung wird durch einen niedrigeren Wert der Zielfunktion $F$ definiert. 
+    Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \textit{co-locate operators, swap resources, Bewegen von Operator}. \\
+    Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{co-located} bezeichnet, 
+    wenn $i$ und $j$ zusammen auf einem Rechner platziert sind. Somit befindet sich $i$ und $j$ auf entweder $u$ oder $v$.\\
+    Bei \textit{swap resources} wird der Operator $i$, der auf $u \in G_{res}$ platziert ist, auf eine neue Ressource $v \in G_{res}$ aus $L$ verschoben. 
+    Für den Fall, dass zuerst $n$ Operatoren $j_1, j_2, ..., j_n$auf $u$ alloziert sind, werden diese auf $v$ verschoben. \\
+    Die Funktionalität \textit{move single locator}  bewegt nur einen einzelnen Operator $i$ von $u \in G_{res}$ zu $v \in G_{res}$, wobei $v$ aus $L$ ausgewählt wird. 
+
 \end{minipage}
 
 \subsection{Tabu Search}
+Die Heurisitische lokale Suche ist abhängig von der initialen Konfiguration und terminiert nur bedingt mit einer globalen optimalen Lösung für das Operatorplatzierungproblem. 
+Um dem entgegenzuwirken, wird die Heurisik zur Tabu Search erweitert. 
 
 \begin{minipage}{0.5\textwidth}
 
@@ -272,6 +288,7 @@ Local Search iteriert über die aus der Greedy First Fit Heuristik resultierende
 \begin{minipage}{0.5\textwidth}
     Bla Bla Bla
 \end{minipage}
+\vfill
 
 
 
