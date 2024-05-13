@@ -7,8 +7,9 @@
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{algorithmic}
 \usepackage{algorithm}
-
-
+\usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
+\usepackage{booktabs}
+\usepackage{siunitx}
 \bibliographystyle{plain}
 
 
@@ -68,8 +69,8 @@ In solch einem System stehen zahlreiche Ressourcen zur Verfügung.
 Als Operatorplatzierung bezeichnet man das Problem, 
 die Operatoren im System optimal auf verfügbare Knoten zu platzieren.
 Für die Evaluation solcher Modelle werden diverse Quality-of-Service Attribute herangezogen. 
-Dazu gehören Durchsatz, End-zu-End Latenz und Verfügbarkeit \cite{k3} \cite{cardellini-optimal_operatorplc}.  Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS Attribute 
-zu fokusieren, die einfach angepasst werden können \cite{k3}.
+Dazu gehören Durchsatz, End-zu-End Latenz und Verfügbarkeit \cite{efficient-operator-placement} \cite{cardellini-optimal_operatorplc}.  Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS Attribute 
+zu fokusieren, die einfach angepasst werden können \cite{efficient-operator-placement}.
 Diese Arbeit fokusiert sich auf einen Ansatz, der bekannte Heurisiken kombiniert und optimale Lösungen effizient approximiert. Der Ansatz bezieht sich auf keine spezifische
 Implementierung und ist somit modell-frei. Somit kann diese Lösung für verschiedene Systeme angewendet werden.
 
@@ -93,7 +94,7 @@ Beide Systeme werden mit gerichteten, gewichteten zykelfreien Graphen $G = (V,E)
 
 \textit{Datenstrom Modelle} werden durch $G_{svs} = (V_{svs}, E_{svs})$ beschrieben. In diesem Modell beschreiben Knoten $u \in V_{svs}$ Operatoren im System. 
 Zusätzlich sind in $V_{svs}$ Datenquellen und Datenbecken enthalten. Man spricht hierbei von Datenbecken (vgl. "sink"), ein Punkt, an dem die Berechnungen der Operatoren zusammekommen. 
-Zu den Operatoren gehören auch sogenannte \textit{pinned} Operatoren \cite{k3}, 
+Zu den Operatoren gehören auch sogenannte \textit{pinned} Operatoren \cite{efficient-operator-placement}, 
 die Datenquellen und -becken beinhalten. Kanten $(u,v) \in E_{svs}$ beschreiben Datenstreams 
 zwischen den Operatoren $u$ und $v$.  Ein Stream ist ein kontinuierliche Sequenz von Daten. 
 
@@ -108,7 +109,7 @@ eine logische Verknüpfung zwischen dem Rechnerressourcen $u$ und $v$.
 \subsection{Definition von Operatorplatzierungproblem} \label{OPP-Definition}
 Ein Operator kann aus politischen, sicherheitsbezüglichen oder topologichen Gründen \cite{cardellini-optimal_operatorplc} nicht auf jedem Knoten 
 $i \in V_{svs}$ im Datenstrommodell platziert werden. 
-Für jeden Operator $i \in V_{svs}$ gibt es eine Menge an Kandidatressourcen $V_{res}^i$ (Schreibweise wie in \cite{k3}).
+Für jeden Operator $i \in V_{svs}$ gibt es eine Menge an Kandidatressourcen $V_{res}^i$ (Schreibweise wie in \cite{efficient-operator-placement}).
 
 Das Operator Problem bezeichnet eine Abbildung zwischen den genannten Modellen. Die Abbildung wird eingeschränkt,
 damit die zu minimierenden QuS Attribute eingeschränkt werden. Folglich wird der optimale Kandidat $u$ in den Kandidatenressourcen $V_{res}^i$
@@ -130,7 +131,7 @@ auf dem Rechner $u$ platziert wird, andernfalls $x_{i,u} = 0$
 
 Hierbei wird die Funktion $F(x)$ bezüglich ausgewählten QoS minimiert. Dieses multi-objective Optimierungsproblem wird durch 
 Simple Additive Weight technique \cite{yoon-multiple-optimization} zu einem single-objective Problem umgewandelt.
-Für typische QoS Attribute wie Antwortzeit, Verfügbarkeit und Netzwerkverwendung \cite{k3} wird die Funktion $F(x)$ wie folgt defininiert:
+Für typische QoS Attribute wie Antwortzeit, Verfügbarkeit und Netzwerkverwendung \cite{efficient-operator-placement} wird die Funktion $F(x)$ wie folgt defininiert:
 \[ 
     \begin{gathered}
         F(x) = w_r \frac{R(x) - R_{min}}{R_{max} - R_{min}} 
@@ -151,7 +152,7 @@ der Rechnerressourcen möglich. Dabei werden die Links zwischen $u \in V_{res}^i
 
 
 
-\section{Heuristiken}
+\section{Heuristiken} \label{Heurisiken}
 % erwähnen dass es sich um ein model free characteristic handelt
 Wie in \cite{cardellini-optimal_operatorplc} gezeigt, ist das 
 Operatorplatzierungproblem NP-hard.
@@ -162,7 +163,7 @@ zu einer approximierten Optimalösung führt.
 Dieser Ansatz beinhaltet eine Kombination mehrere bekannter Heuristiken, die die Funktion $F$ aus \ref{to-miminize-function} minimieren.  
 Ein Greedy First-Fit Ansatz in Kombination mit einer lokalen Suche findet meist lokale Optima. 
 Um dem entgegenzuwirken wird dieser Ansatz mit einer Tabu Search verbunden. 
-Somit werden häufiger \cite{k3} globale Optima gefunden. 
+Somit werden häufiger \cite{efficient-operator-placement} globale Optima gefunden. 
 
 Ein Greedy First-Fit Algorithmus wird für das Bin-packing Packing Problem verwenden, 
 aber auch oft für das Operator Placement Problem \cite{k7}\cite{k8}.
@@ -176,7 +177,7 @@ Die drei Heuristiken werden gekonnt kombiniert und führen somit zu einer besser
 % penalty function ist für Links, nicht für knoten!
 Die Auswahl von verschiedenen Möglichkeiten $u \in V_{res}^i$ bringt Einbussen mit sich. Diverse Ressourcen haben verschiedene Lokalitäten,
 deren Performance durch Netzwerkdynamiken beeinflusst wird. Da die Daten übertragen werden müssen, kommen nicht vorhersehbare Network Delays dazu. Hierzu müssen Network Delay, 
-Bandbreite und Netzwerkgeschwindigkeit\cite{k3} betrachtet werden.
+Bandbreite und Netzwerkgeschwindigkeit\cite{efficient-operator-placement} betrachtet werden.
 
 
 \subsection{Greedy First Fit} \label{greedy-first-fit}
@@ -194,6 +195,8 @@ zwischen $v$ und den angepinnten Operatore $P$. Folglich:
 Ausgewählt wird der erste Rechner in der Liste, der den Operator aufnehmen kann. 
 Mittels Breitensuche werden für alle Operatoren Plazierungen bestimmt. Die daraus resultierenden Operatorplatzierungen werden als eine Konfiguration bezeichnet. 
 Diese Heuristik 
+
+%greedy frist fit no delta beschreiben
 
 
 
@@ -330,10 +333,75 @@ des Lösungsraums und kann somit zu verbesserten Lösungen führen.
 
 
 % vgl greedy, greedy no delta, local search, tabu search tabelle aus paper
-\vfill
+\section{Evaluation}
+Die oben angeführten Heuristiken \ref{Heurisiken} werden in einem Experiment aus \cite{efficient-operator-placement} evaluiert. 
+Für das Expermiment werden die drei Heuristiken Greedy First Fit, Greedy First Fit ohne penalty function und die lokale Suche verglichen. 
+Als bezugsnorm wird die optimale Lösung des Operatorplatzierungsproblems verwendet. Im Experiment von \cite{efficient-operator-placement} werden mehrere Heuristiken
+bewertet, die hier der Einfachheit halber nicht aufgeführt werden. Auch die genauen Details der Hardware sind nicht relevant für die Evaluation. 
+
+
+\subsection{Infrastruktur}
+Für die Untersuchung werden drei verschiedene Netzwerktopologien herangezogen. 
+Diese Topologien beschreiben die verteilten Infrastrukturen der SVS. 
+Diesbezüglich werden die Rechnerressourcen und deren Verbindungen definiert, sowie die inter-knoten latenz \cite{efficient-operator-placement}.
+Die drei untersuchten Topologien sind in Abbildung \ref{topologies} dargestellt. Dabei werden simple sequentielle, replicated und Diamaond Topologien verwendet.\\
+
+\noindent
+
+
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=0.75\linewidth]{topologies.png}
+\captionof{figure}{Sequentiell, replicated, Diamand Topologie}
+\label{topologies}  
+\end{minipage}
+\hspace{10pt}
+\begin{minipage}{0.5\textwidth}
+in den gezeigten topologien hat jede schicht mindestens einen Operator. \\Die erste und letzte Schicht haben jeweils einen Operator, die Quelle und das Becken. 
+Alle Ressourcentopologien haben die glieche anzahl an ressourcen. 
+\end{minipage}
 
 
 
+
+\subsection{Experimentergebnisse}
+Für das Experiment werden resolution time (rt) und performance degradation (pd) \cite{efficient-operator-placement} hinzugezogen. Diese Attribute werden mit der optimalen Lösung verglichen. 
+rt beschreibt die benötigte Zeit, um eine Lösung zu finden, pd beschreibt die Abweichung von der optimalen Lösung.
+Zusätzlich wird der Beschleunigugnsfaktor (bf) mit $bf = rt_{optimal} / rt_i$ definiert, wobei $rt_i$ die Zeit für die Heuristik $i$ ist. 
+pf wurde definiert als $pd_i = \frac{F_i - F_{ODP}}{1 - F_{ODP}}$  \cite{efficient-operator-placement}, wobei $F_i$ die Zielfunktion der Heuristik $i$ ist. 
+%odp definieren 
+
+
+\subsubsection{Auswahl der QoS}
+
+\subsubsection{Generelle Ergenisse}
+\begin{table}[htbp]
+    \centering
+
+    \begin{tabular}{llllll}
+    \toprule
+    Policy                           &      & DA        & SA       & RA & Overall Average Value \\
+    \midrule
+    ODP                              &rt 36s&  0.1      & 41.4             & 915.2            &             \\
+    \cmidrule{1-5}
+    lokale suche                     &sp    &  0.68     & 150.54           & 353.07           & 215.81      \\
+                                     &rt    &0\%        & 1\%              &4\%               & 1\%         \\
+    tabu suche                       &sp    &  0.31     & 65.91            & 64.93            & 83.53       \\
+                                     &rt    &0\%        & 1\%              &4\%               & 1\%         \\           
+    greedy first fit                 &sp    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
+                                     &rt    &0\%        & 7\%              &5\%               &11\%               \\
+    greedy first fit (keine $\delta$)&sp    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
+                                     &rt    &34\%       & 7\%              &24\%              & 19\%               \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\section{Konklusion}
+
+
+
+
+\newpage
 \bibliography{biblio}
 
 \end{document}
