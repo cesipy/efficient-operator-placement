@@ -206,7 +206,7 @@ Dieser Algorithmus durchläuft drei Schritte: Zunächst wird eine initiale Konfi
 Mit dieser Liste wird dann eine initiale Konfiguration $S$ durch den Greedy First Fit Algorithmus erstellt (Zeile 6). \\
 
 
-
+\noindent
 \begin{minipage}{0.55\textwidth}
 Solange bessere Platzierungen der Operatoren gefunden werden, iteriert die lokale Suche über die Konfigurationen  (Zeile (insert)). 
 Eine Verbesserung wird durch einen niedrigeren Wert der Zielfunktion $F$ definiert. 
@@ -269,15 +269,17 @@ Der Algortihmus kann in die folgenden Schritte unterteilt werden \cite{glover-ta
 Anhand dieser Ausgangslösung wird eine Nachbarschaft bestimmt. Die Nachbarschaft wird um die sogenannten Tabu Züge verkleinert. 
 Aus der resultierenden Nachbarschaft wird die beste Lösung bestimmt und ausgewählt. Am ende der iteration wird die Tabuliste basierend auf einem Tabukriterium aktualisiert.
 
+\noindent
+\begin{minipage}{0.5\textwidth}
+Der Algorithmus startet mit einer Ausgangskonfiguration $S'$, die von der Greedy-First-Fit-Heuristik erstellt wurde (Zeile 6). \\ \\
+Von Zeile 10 bis 21 durchläuft er eine Schleife, die in jeder Iteration nach einer besseren Lösung $S$ in der Nachbarschaft sucht. 
+Diese Suche wird mittels lokaler Suche durchgeführt. Dabei werden Lösungen aus $S$ ausgeschlossen, die in der Tabuliste enthalten sind (Zeile 12). \\ \\
+Die Tabuliste $tabuList$ ist anfangs leer und beinhaltet nach der ersten Iteration die letzten $tabuList_{max}$ Platzierungen. 
+Dadurch wird verhindert, dass die Schleife unendlich iteriert.
+In jeder iteration wird die neue Lösung $S$ mit der Zielfuntion $F$ evaluiert (Zeile 13). %penalty function
+Wenn die jetzige Lösung $S$ besser als die vorherige Lösung $S^*$ ist, wird $S$ als die beste Lösung $S^*$ gespeichert (Zeile 15, 16). \\ \\
 
-\begin{minipage}{0.45\textwidth}
-Gestartet wird mit einer Ausgangskonfiguration $S'$ , die von der Greedy First Fit Heuristik erstellt wurde (Zeile 6). \\
-Von Zeile 10 bis 21 wird startet eine Schleife, die in jeder Iteration nach einer besseren Lösung in der Nachbarschaft sucht. 
-Die Suche wird mittels lokaler Suche durchgeführt. 
-Hierfür werden Lösungen aus $S$ ausgeschlossen, die in der Tabu Liste enthalten sind (Zeile 12). \\
-Die Tabu liste $tl$  ist anfangs leer, beinhaltet nach der ersten Iteration die letzten $tl_{max}$ Platzierungen.
-So wird verhindert, dass die Schleife unendlich iteriert. 
-
+Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Ausgangslösung $S'$ verglichen. Die insgesamt beste Lösung wird zurückgegeben. 
 
 \end{minipage}
 \hspace{10pt}
@@ -317,6 +319,8 @@ So wird verhindert, dass die Schleife unendlich iteriert.
 \end{algorithm}
 
 \end{minipage}  
+
+\vspace{0.7cm}
 
 Mit dieser Heuristik wird der Lösungsraum nach besseren Approximationen des Optimums durchsucht. 
 Im Vergleich zur Greedy First Fit \ref{greedy-first-fit} und der 
