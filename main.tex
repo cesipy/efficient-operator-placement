@@ -8,6 +8,7 @@
 \usepackage{algorithmic}
 \usepackage{algorithm}
 
+
 \bibliographystyle{plain}
 
 
@@ -197,7 +198,8 @@ Diese Heuristik
 
 
 \subsection{Local Search} \label{local-search}
-Die lokale Suche iteriert über die Konfigurationen, die aus der Greedy First Fit Heuristik resultieren, um eine bessere Lösung zu finden. Der Algorithmus dafür wird im Algorithmus 1 \ref{local-search-algo} gezeigt. 
+Die lokale Suche ist eine iterative Heuristik zur Optimierung von Lösungen in der Nachbarschaft einer Ausgangskonfiguration.
+Dabei iteriert diese Methode über die Konfiguration, die aus der Greedy First Fit Heuristik resultieret. Der Algorithmus dafür wird im Algorithmus 1 \ref{local-search-algo} gezeigt. 
 Dieser Algorithmus durchläuft drei Schritte: Zunächst wird eine initiale Konfiguration durch den Greedy First Fit berechnet.
  Anschließend wird eine Nachbarschaft von ähnlichen Konfigurationen bestimmt, und schließlich wird die beste Lösung in dieser Nachbarschaft gefunden. 
  Um die Nachbarschaft zu bestimmen, wird zunächst eine sortierte Liste $L$ erstellt, basierend auf der penalty function $\delta$ wie in \ref{greedy-first-fit}.
@@ -222,7 +224,7 @@ Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \
 \begin{minipage}{0.5\textwidth} \label{local-search-algo}
     \begin{algorithm}[H]
         \caption{Local Search}
-        \begin{algorithmic}
+        \begin{algorithmic}[1]
             \STATE \textbf{function} $\mathrm{localSearch}(G_{dsp}, G_{res})$
             \STATE \textbf{Input}: $G_{\text{dsp}}$, DSP application graph
             \STATE \textbf{Input}: $G_{\text{res}}$, computing resource graph
@@ -246,21 +248,48 @@ Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \
 \end{algorithm}
 \end{minipage}
 
+\vspace{0.7cm}
+Das Zusammenführen von Operatoren auf eine gemeinsame Rechnerressource ermöglicht es, 
+verwandte Aufgaben in eine bessere Lokalität zu platzieren, was QoS verbessern kann. 
+Das Austauschen von Operatoren strebt eine Eliminierung/Minimierung von ressourcelichen Engpässen an. 
+Durch das Bewegen einzelner Operatoren werden somit auch lokale Engpässe minimiert.
+Dafür werden die Konfigurationen so angepasst, dass  Datenströme gleichmäßig verteilt werden.   \\
+Sobald keine Verbesserungen mehr gefunden werden, terminiert die lokale Suche und gibt die beste Konfiguration zurück. 
+Dabei ist es wichtig zu beachten, dass wie \ref{greedy-first-fit} nur eine Approximation ist und in einer lokal-optimalen Lösung enden kann. 
+
+ 
+
 
 \subsection{Tabu Search}
 Die Heurisitische lokale Suche ist abhängig von der initialen Konfiguration und terminiert nur bedingt mit einer globalen optimalen Lösung für das Operatorplatzierungproblem. 
-Um dem entgegenzuwirken, wird die Heurisik zur Tabu Search erweitert. 
+Um dem entgegenzuwirken, wird die Heurisik zur \textit{Tabu Suche} \cite{glover-tabu-search} erweitert.  In dieser Methode wird über mehrere Anfangskonfigurationen iteriert, 
+die anhand der Lokalen Suche nicht unmittelbar zu einer Verbesserung führen. Durch diese Eweiterung
+werden Lösungen evaluiert, die bei einer lokalen Suche nicht betrachtet werden. \\
+Der Algortihmus kann in die folgenden Schritte unterteilt werden \cite{glover-tabu-search-tutorial}. Zuerst wird eine Ausgangslösung berechnet.
+Anhand dieser Ausgangslösung wird eine Nachbarschaft bestimmt. Die Nachbarschaft wird um die sogenannten Tabu Züge verkleinert. 
+Aus der resultierenden Nachbarschaft wird die beste Lösung bestimmt und ausgewählt. Am ende der iteration wird die Tabuliste basierend auf einem Tabukriterium aktualisiert.
 
+
+\begin{minipage}{0.45\textwidth}
+Gestartet wird mit einer Ausgangskonfiguration $S'$ , die von der Greedy First Fit Heuristik erstellt wurde (Zeile 6). \\
+Von Zeile 10 bis 21 wird startet eine Schleife, die in jeder Iteration nach einer besseren Lösung in der Nachbarschaft sucht. 
+Die Suche wird mittels lokaler Suche durchgeführt. 
+Hierfür werden Lösungen aus $S$ ausgeschlossen, die in der Tabu Liste enthalten sind (Zeile 12). \\
+Die Tabu liste $tl$  ist anfangs leer, beinhaltet nach der ersten Iteration die letzten $tl_{max}$ Platzierungen.
+So wird verhindert, dass die Schleife unendlich iteriert. 
+
+
+\end{minipage}
+\hspace{10pt}
 \begin{minipage}{0.5\textwidth}
-
 \begin{algorithm}[H]
     \caption{Tabu Search}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \STATE \textbf{function} $\mathrm{tabuSearch}(G_{dsp}, G_{res})$
         \STATE \textbf{Input}: $G_{\text{dsp}}$, DSP application graph
         \STATE \textbf{Input}: $G_{\text{res}}$, computing resource graph
 
-        \STATE $S^* \leftarrow NOT_DEFINED$
+        \STATE $S^* \leftarrow$ undefiniert
         \STATE $F^* \leftarrow \infty$
         \STATE $S' \leftarrow \text{localSearch}(G_{dsp}, G_{res})$   //local optimum
         \STATE $F' \leftarrow$ objective function value for $S'$
@@ -288,9 +317,15 @@ Um dem entgegenzuwirken, wird die Heurisik zur Tabu Search erweitert.
 \end{algorithm}
 
 \end{minipage}  
-\begin{minipage}{0.5\textwidth}
-    Bla Bla Bla
-\end{minipage}
+
+Mit dieser Heuristik wird der Lösungsraum nach besseren Approximationen des Optimums durchsucht. 
+Im Vergleich zur Greedy First Fit \ref{greedy-first-fit} und der 
+lokalen Suche \ref{local-search} bietet die Tabu-Suche eine erweiterte Fähigkeit zur Exploration 
+des Lösungsraums und kann somit zu verbesserten Lösungen führen.
+
+
+
+% vgl greedy, greedy no delta, local search, tabu search tabelle aus paper
 \vfill
 
 
