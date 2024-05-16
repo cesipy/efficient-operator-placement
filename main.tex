@@ -377,21 +377,27 @@ Netzwerklatenz und Antwortzeit als QoS selektiert und folglich mit der Straffunk
     \caption{Evaluation der Heuristiken}
     \begin{tabular}{llllll}
     \toprule
-    Policy                           &      & DA        & SA       & RA & Overall Average Value \\
+    Policy                           &       & DA        & SA       & RA & Overall Average Value \\
     \midrule
-    ODP                              &rt 36s&  0.1      & 41.4             & 915.2            &             \\
+    ODP                              &rt 36s &  0.1      & 41.4             & 915.2            &             \\
+                                     &rt 100s&  0.8      & 2174.8           & 2174.8           & 32193.9     \\
     \cmidrule{1-5}
-    Lokale Suche                     &bf    &  0.68     & 150.54           & 353.07           & 215.81      \\
-                                     &pd    &0\%        & 1\%              &4\%               & 1\%         \\
-    Tabu Suche                       &bf    &  0.31     & 65.91            & 64.93            & 83.53       \\
-                                     &pd    &0\%        & 1\%              &4\%               & 1\%         \\           
-    Greedy First Fit                 &bf    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
-                                     &pd    &0\%        & 7\%              &5\%               &11\%               \\
-    Greedy First Fit (keine $\delta$)&bf    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
-                                     &pd    &34\%       & 7\%              &24\%              & 19\%               \\
+    Lokale Suche                     &bf     &  0.68     & 150.54           & 353.07           & 215.81      \\
+                                     &pd     &0\%        & 1\%              &4\%               & 1\%         \\
+    Tabu Suche                       &bf     &  0.31     & 65.91            & 64.93            & 83.53       \\
+                                     &pd     &0\%        & 1\%              &4\%               & 1\%         \\           
+    Greedy First Fit                 &bf     &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
+                                     &pd     &0\%        & 7\%              &5\%               &11\%               \\
+    Greedy First Fit (keine $\delta$)&bf     &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
+                                     &pd     &34\%       & 7\%              &24\%              & 19\%               \\
     \bottomrule
+    \multicolumn{4}{l}{\footnotesize \textit{t} statistics in parentheses}\\
     \end{tabular}
 \end{table} \label{experiment-tabelle}
+
+
+Die Berechnung der Optimalösung weist eine effizient Laufzeit für Diamand basierte auf. 
+Diese Berechnung ist in unter einer Sekunde verfügbar. 
 
 Aus Tabelle \ref{experiment-tabelle} ist zu erkennen, dass Greedy First Fit die schnellste Lösung bietet. 
 Da die übrigen Heuristiken auf Greedy First Fit basieren, entspricht das auch den Erwartungen. 
@@ -401,7 +407,8 @@ Auffällig ist die Diskrepanz zwischen der Greedy First Fit Implementierung mit 
 Bei Beschleunigungsfaktoren ähnlicher Größenordnung resultieren die verschiedenen Implementierungen 
 in unterschiedlichen Lösungsqualitäten, besonders bei Diamant- und replizierten Topologien.
 
-
+Lokale Suche ist im Experiment schneller als Tabu Suche, wie zu erwartend. 
+In der Degradation der Performance ist kein klarer Unterschied zu erkennen. 
 \section{Konklusion}
 
 
