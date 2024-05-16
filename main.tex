@@ -341,58 +341,68 @@ Diesbezüglich werden die Rechnerressourcen und deren Verbindungen definiert, so
 Die drei untersuchten Topologien sind in Abbildung \ref{topologies} dargestellt. Dabei werden simple sequentielle, replicated und Diamaond Topologien verwendet.\\
 
 \noindent
-
-
-\begin{minipage}{0.5\textwidth}
-\includegraphics[width=0.75\linewidth]{topologies.png}
-\captionof{figure}{Sequentiell, replicated, Diamand Topologie}
-\label{topologies}  
+\begin{minipage}{0.45\textwidth}
+    \includegraphics[width=0.75\linewidth]{topologies.png}
+\captionof{figure}{Sequentielle, replizierte und Diamant-Topologie}
+\label{topologies}
 \end{minipage}
 \hspace{10pt}
 \begin{minipage}{0.5\textwidth}
-in den gezeigten topologien hat jede schicht mindestens einen Operator. \\Die erste und letzte Schicht haben jeweils einen Operator, die Quelle und das Becken. 
-Alle Ressourcentopologien haben die glieche anzahl an ressourcen. 
+    In den dargestellten Topologien hat jede Schicht mindestens einen Operator. 
+    Die erste und letzte Schicht verfügen jeweils über einen Operator, die Quelle und das Becken. 
+    Alle Ressourcentopologien haben die gleiche Anzahl an Ressourcen.
 \end{minipage}
 
 
 
+\subsection{Experimentelle Ergebnisse}
 
-\subsection{Experimentergebnisse}
-Für das Experiment werden resolution time (rt) und performance degradation (pd) \cite{efficient-operator-placement} hinzugezogen. Diese Attribute werden mit der optimalen Lösung verglichen. 
-rt beschreibt die benötigte Zeit, um eine Lösung zu finden, pd beschreibt die Abweichung von der optimalen Lösung.
-Zusätzlich wird der Beschleunigugnsfaktor (bf) mit $bf = rt_{optimal} / rt_i$ definiert, wobei $rt_i$ die Zeit für die Heuristik $i$ ist. 
-pf wurde definiert als $pd_i = \frac{F_i - F_{ODP}}{1 - F_{ODP}}$  \cite{efficient-operator-placement}, wobei $F_i$ die Zielfunktion der Heuristik $i$ ist. 
-%odp definieren 
+Für das Experiment werden die Auflösungszeit (rt) und die Leistungseinbuße (pd) betrachtet \cite{efficient-operator-placement}.
+Diese Merkmale werden mit der optimalen Lösung verglichen. Rt beschreibt die benötigte Zeit, 
+um eine Lösung zu finden, pd beschreibt die Abweichung von der optimalen Lösung. 
+Zusätzlich wird der Beschleunigungsfaktor (bf) definiert als $bf = rt_{optimal} / rt_i$, wobei $rt_i$ die Zeit für die Heuristik $i$ ist.
+Pf wird definiert als $pd_i = \frac{F_i - F_{ODP}}{1 - F_{ODP}}$ \cite{efficient-operator-placement}, 
+wobei $F_i$ die Zielfunktion der Heuristik $i$ ist.
+
+Wie in \ref{OPP-Definition} definiert, werden im Experiment Verfügbarkeit, 
+Netzwerklatenz und Antwortzeit als QoS selektiert und folglich mit der Straffunktion minimiert.
 
 
-\subsubsection{Auswahl der QoS}
+% ODP definieren
+
 
 \subsubsection{Generelle Ergenisse}
-\begin{table}[htbp]
+\begin{table}[htbp]  
     \centering
-
+    \caption{Evaluation der Heuristiken}
     \begin{tabular}{llllll}
     \toprule
     Policy                           &      & DA        & SA       & RA & Overall Average Value \\
     \midrule
     ODP                              &rt 36s&  0.1      & 41.4             & 915.2            &             \\
     \cmidrule{1-5}
-    lokale suche                     &sp    &  0.68     & 150.54           & 353.07           & 215.81      \\
-                                     &rt    &0\%        & 1\%              &4\%               & 1\%         \\
-    tabu suche                       &sp    &  0.31     & 65.91            & 64.93            & 83.53       \\
-                                     &rt    &0\%        & 1\%              &4\%               & 1\%         \\           
-    greedy first fit                 &sp    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
-                                     &rt    &0\%        & 7\%              &5\%               &11\%               \\
-    greedy first fit (keine $\delta$)&sp    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
-                                     &rt    &34\%       & 7\%              &24\%              & 19\%               \\
+    Lokale Suche                     &bf    &  0.68     & 150.54           & 353.07           & 215.81      \\
+                                     &pd    &0\%        & 1\%              &4\%               & 1\%         \\
+    Tabu Suche                       &bf    &  0.31     & 65.91            & 64.93            & 83.53       \\
+                                     &pd    &0\%        & 1\%              &4\%               & 1\%         \\           
+    Greedy First Fit                 &bf    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
+                                     &pd    &0\%        & 7\%              &5\%               &11\%               \\
+    Greedy First Fit (keine $\delta$)&bf    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
+                                     &pd    &34\%       & 7\%              &24\%              & 19\%               \\
     \bottomrule
     \end{tabular}
-\end{table}
+\end{table} \label{experiment-tabelle}
+
+Aus Tabelle \ref{experiment-tabelle} ist zu erkennen, dass Greedy First Fit die schnellste Lösung bietet. 
+Da die übrigen Heuristiken auf Greedy First Fit basieren, entspricht das auch den Erwartungen. 
+Trotz des hohen Beschleunigungsfaktors $bf$ liefern Greedy First Fit und Greedy First Fit (ohne $\delta$) degradierte Lösungen. 
+Somit ergibt sich ein Kompromiss zwischen der Qualität der Lösung und der Laufzeit des Algorithmus. 
+Auffällig ist die Diskrepanz zwischen der Greedy First Fit Implementierung mit und ohne Straffunktion $\delta$. 
+Bei Beschleunigungsfaktoren ähnlicher Größenordnung resultieren die verschiedenen Implementierungen 
+in unterschiedlichen Lösungsqualitäten, besonders bei Diamant- und replizierten Topologien.
 
 
 \section{Konklusion}
-
-
 
 
 \newpage
