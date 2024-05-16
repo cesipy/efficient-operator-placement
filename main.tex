@@ -209,49 +209,46 @@ Dieser Algorithmus durchläuft drei Schritte: Zunächst wird eine initiale Konfi
 Mit dieser Liste wird dann eine initiale Konfiguration $S$ durch den Greedy First Fit Algorithmus erstellt (Zeile 6). \\
 
 
-\noindent
-\begin{minipage}{0.55\textwidth}
+
 Solange bessere Platzierungen der Operatoren gefunden werden, iteriert die lokale Suche über die Konfigurationen  (Zeile (insert)). 
 Eine Verbesserung wird durch einen niedrigeren Wert der Zielfunktion $F$ definiert. 
 Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \textit{co-locate operators, swap resources, Bewegen von Operator}. \\
 
-    Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{co-located} bezeichnet, 
-    wenn $i$ und $j$ zusammen auf einem Rechner platziert sind. Somit befindet sich $i$ und $j$ auf entweder $u$ oder $v$.\\
-    Bei \textit{swap resources} wird der Operator $i$, der auf $u \in G_{res}$ platziert ist, auf eine neue Ressource $v \in G_{res}$ aus $L$ verschoben. 
-    Für den Fall, dass zuerst $n$ Operatoren $j_1, j_2, ..., j_n$auf $u$ alloziert sind, werden diese auf $v$ verschoben. \\ 
-    Die Funktionalität \textit{move single locator}  bewegt nur einen einzelnen Operator $i$ von $u \in G_{res}$ zu $v \in G_{res}$, wobei $v$ aus $L$ ausgewählt wird. 
 
-\end{minipage}
-\hspace{10pt}
-% TODO: übersetzen auf deutsch
-\begin{minipage}{0.5\textwidth} \label{local-search-algo}
-    \begin{algorithm}[H]
-        \caption{Local Search}
-        \begin{algorithmic}[1]
-            \STATE \textbf{function} $\mathrm{localSearch}(G_{dsp}, G_{res})$
-            \STATE \textbf{Input}: $G_{\text{dsp}}$, DSP application graph
-            \STATE \textbf{Input}: $G_{\text{res}}$, computing resource graph
-            \STATE $P \leftarrow$ resources hosting the pinned operators of $G_{\text{dsp}}$
-            \STATE $L \leftarrow$ resources of $G_{\text{res}}$, 
-            sorted by the cumulative link penalty with respect to nodes in $P$
-            \STATE link penalty with respect to nodes in $P$
-            \STATE $S \leftarrow$  solve GreedyFirstFit($G_{\text{dsp}}$, $L$)
-            \STATE \textbf{do}
-    
-            \STATE \hspace{\algorithmicindent} $F \leftarrow$  value of the objective function for $S$
-            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by colocating operators
-            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by swapping resources
-            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by relocating a single operator
-            \STATE \hspace{\algorithmicindent} $F' \leftarrow$ value of the objective function for S
-    
-            \STATE \textbf{while} $F'  < F$ \textbf{do}
-            \STATE \hspace{\algorithmicindent} \textbf{return} $S$
-            \STATE \textbf{end function}
-        \end{algorithmic}
+\begin{algorithm}[H]
+    \caption{Local Search}
+    \begin{algorithmic}[1]
+        \STATE \textbf{function} $\mathrm{localSearch}(G_{dsp}, G_{res})$
+        \STATE \textbf{Input}: $G_{\text{dsp}}$, DSP application graph
+        \STATE \textbf{Input}: $G_{\text{res}}$, computing resource graph
+        \STATE $P \leftarrow$ resources hosting the pinned operators of $G_{\text{dsp}}$
+        \STATE $L \leftarrow$ resources of $G_{\text{res}}$, 
+        sorted by the cumulative link penalty with respect to nodes in $P$
+        \STATE link penalty with respect to nodes in $P$
+        \STATE $S \leftarrow$  solve GreedyFirstFit($G_{\text{dsp}}$, $L$)
+        \STATE \textbf{do}
+
+        \STATE \hspace{\algorithmicindent} $F \leftarrow$  value of the objective function for $S$
+        \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by colocating operators
+        \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by swapping resources
+        \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by relocating a single operator
+        \STATE \hspace{\algorithmicindent} $F' \leftarrow$ value of the objective function for S
+
+        \STATE \textbf{while} $F'  < F$ \textbf{do}
+        \STATE \hspace{\algorithmicindent} \textbf{return} $S$
+        \STATE \textbf{end function}
+    \end{algorithmic}
 \end{algorithm}
-\end{minipage}
 
-\vspace{0.7cm}
+
+Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{co-located} bezeichnet, 
+wenn $i$ und $j$ zusammen auf einem Rechner platziert sind. Somit befindet sich $i$ und $j$ auf entweder $u$ oder $v$.\\
+Bei \textit{swap resources} wird der Operator $i$, der auf $u \in G_{res}$ platziert ist, auf eine neue Ressource $v \in G_{res}$ aus $L$ verschoben. 
+Für den Fall, dass zuerst $n$ Operatoren $j_1, j_2, ..., j_n$auf $u$ alloziert sind, werden diese auf $v$ verschoben. \\ 
+Die Funktionalität \textit{move single locator}  bewegt nur einen einzelnen Operator $i$ von $u \in G_{res}$ zu $v \in G_{res}$, wobei $v$ aus $L$ ausgewählt wird. 
+
+
+% \vspace{0.7cm}
 Das Zusammenführen von Operatoren auf eine gemeinsame Rechnerressource ermöglicht es, 
 verwandte Aufgaben in eine bessere Lokalität zu platzieren, was QoS verbessern kann. 
 Das Austauschen von Operatoren strebt eine Eliminierung/Minimierung von ressourcelichen Engpässen an. 
@@ -272,21 +269,7 @@ Der Algortihmus kann in die folgenden Schritte unterteilt werden \cite{glover-ta
 Anhand dieser Ausgangslösung wird eine Nachbarschaft bestimmt. Die Nachbarschaft wird um die sogenannten Tabu Züge verkleinert. 
 Aus der resultierenden Nachbarschaft wird die beste Lösung bestimmt und ausgewählt. Am ende der iteration wird die Tabuliste basierend auf einem Tabukriterium aktualisiert.
 
-\noindent
-\begin{minipage}{0.5\textwidth}
-Der Algorithmus startet mit einer Ausgangskonfiguration $S'$, die von der Greedy-First-Fit-Heuristik erstellt wurde (Zeile 6). \\ \\
-Von Zeile 10 bis 21 durchläuft er eine Schleife, die in jeder Iteration nach einer besseren Lösung $S$ in der Nachbarschaft sucht. 
-Diese Suche wird mittels lokaler Suche durchgeführt. Dabei werden Lösungen aus $S$ ausgeschlossen, die in der Tabuliste enthalten sind (Zeile 12). \\ \\
-Die Tabuliste $tabuList$ ist anfangs leer und beinhaltet nach der ersten Iteration die letzten $tabuList_{max}$ Platzierungen. 
-Dadurch wird verhindert, dass die Schleife unendlich iteriert.
-In jeder iteration wird die neue Lösung $S$ mit der Zielfuntion $F$ evaluiert (Zeile 13). %penalty function
-Wenn die jetzige Lösung $S$ besser als die vorherige Lösung $S^*$ ist, wird $S$ als die beste Lösung $S^*$ gespeichert (Zeile 15, 16). \\ \\
 
-Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Ausgangslösung $S'$ verglichen. Die insgesamt beste Lösung wird zurückgegeben. 
-
-\end{minipage}
-\hspace{10pt}
-\begin{minipage}{0.5\textwidth}
 \begin{algorithm}[H]
     \caption{Tabu Search}
     \begin{algorithmic}[1]
@@ -321,9 +304,20 @@ Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Au
     \end{algorithmic}
 \end{algorithm}
 
-\end{minipage}  
 
-\vspace{0.7cm}
+Der Algorithmus startet mit einer Ausgangskonfiguration $S'$, die von der Greedy-First-Fit-Heuristik erstellt wurde (Zeile 6). \\ \\
+Von Zeile 10 bis 21 durchläuft er eine Schleife, die in jeder Iteration nach einer besseren Lösung $S$ in der Nachbarschaft sucht. 
+Diese Suche wird mittels lokaler Suche durchgeführt. Dabei werden Lösungen aus $S$ ausgeschlossen, die in der Tabuliste enthalten sind (Zeile 12). \\ \\
+Die Tabuliste $tabuList$ ist anfangs leer und beinhaltet nach der ersten Iteration die letzten $tabuList_{max}$ Platzierungen. 
+Dadurch wird verhindert, dass die Schleife unendlich iteriert.
+In jeder iteration wird die neue Lösung $S$ mit der Zielfuntion $F$ evaluiert (Zeile 13). %penalty function
+Wenn die jetzige Lösung $S$ besser als die vorherige Lösung $S^*$ ist, wird $S$ als die beste Lösung $S^*$ gespeichert (Zeile 15, 16). \\ \\
+
+Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Ausgangslösung $S'$ verglichen. Die insgesamt beste Lösung wird zurückgegeben. 
+
+
+
+%\vspace{0.7cm}
 
 Mit dieser Heuristik wird der Lösungsraum nach besseren Approximationen des Optimums durchsucht. 
 Im Vergleich zur Greedy First Fit \ref{greedy-first-fit} und der 
