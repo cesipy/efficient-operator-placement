@@ -357,7 +357,7 @@ Die drei untersuchten Topologien sind in Abbildung \ref{topologies} dargestellt.
 
 \subsection{Experimentelle Ergebnisse}
 
-Für das Experiment werden die Auflösungszeit (rt) und die Leistungseinbuße (le) betrachtet \cite{efficient-operator-placement}.
+Für das Experiment werden die Laufzeit (LZ) und die Qualitätseinbuße (QE) betrachtet \cite{efficient-operator-placement}.
 Diese Merkmale werden mit der optimalen Lösung verglichen. Rt beschreibt die benötigte Zeit, 
 um eine Lösung zu finden, pd beschreibt die Abweichung von der optimalen Lösung. 
 Zusätzlich wird der Beschleunigungsfaktor (bf) definiert als $bf = rt_{optimal} / rt_i$, wobei $rt_i$ die Zeit für die Heuristik $i$ ist.
@@ -365,33 +365,38 @@ Le wird definiert als $le_i = \frac{F_i - F_{ODP}}{1 - F_{ODP}}$ \cite{efficient
 wobei $F_i$ die Zielfunktion der Heuristik $i$ ist.
 
 Wie in \ref{OPP-Definition} definiert, werden im Experiment Verfügbarkeit, 
-Netzwerklatenz und Antwortzeit als QoS selektiert und folglich mit der Straffunktion minimiert.
+Netzwerklatenz und Antwortzeit als QoS selektiert und folglich mit der Straffunktion minimiert. 
 
 
 % ODP definieren
 
 
 \subsubsection{Generelle Ergenisse}
+
+Die Berechnung der Optimalösung weist eine effiziente Laufzeit für Diamandtopologien basierte auf. 
+Diese Berechnung ist in unter einer Sekunde verfügbar. Bei replizierten und sequentiellen Topolgien benötigt die Berechnung deutlich länger. 
+Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus Tabelle). \\
 \begin{table}[htbp]  
     \centering
     \caption{Evaluation der Heuristiken}
     \begin{tabular}{llllll}
     \toprule
-    Policy                           &       & DA        & SA       & RA & Overall Average Value                  \\
+    Policy                           &       & DA        & SA              & RA                & Overall Average Value                  \\
     \midrule
-    ODP                              &rt 36s &  0.1      & 41.4             & 915.2            &                  \\
-                                     &rt 100s&  0.8      & 2174.8           & 2174.8           & 32193.9          \\
+    ODP                              &LZ 36s &  0.1      & 41.4             & 915.2            &                  \\
+                                     &LZ 100s&  0.8      & 2174.8           & 32193.9          &                  \\
     \cmidrule{1-5}
-    Lokale Suche                     &bf     &  0.68     & 150.54           & 353.07           & 215.81           \\
-                                     &le     &0\%        & 1\%              &4\%               & 1\%              \\
-    Tabu Suche                       &bf     &  0.31     & 65.91            & 64.93            & 83.53            \\
-                                     &le     &0\%        & 1\%              &4\%               & 1\%              \\           
-    Greedy First Fit                 &bf     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
-                                     &pd     &0\%        & 7\%              &5\%               &11\%              \\
-    Greedy First Fit (keine $\delta$)&bf     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
-                                     &le     &34\%       & 7\%              &24\%              & 19\%             \\
+    Lokale Suche                     &BF     &  0.68     & 150.54           & 353.07           & 215.81           \\
+                                     &QE     &0\%        & 1\%              &4\%               & 1\%              \\
+    Tabu Suche                       &BF     &  0.31     & 65.91            & 64.93            & 83.53            \\
+                                     &QE     &0\%        & 1\%              &4\%               & 1\%              \\           
+    Greedy First Fit                 &BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
+                                     &QE     &0\%        & 7\%              &5\%               &11\%              \\
+    Greedy First Fit (keine $\delta$)&BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
+                                     &QE     &34\%       & 7\%              &24\%              & 19\%             \\
     \bottomrule
-    \multicolumn{4}{l}{\footnotesize Tabelle aus des Experiments \cite{efficient-operator-placement}, bf = Beschleunigungsfaktor, le = Leistungseinbuße}\\
+    \multicolumn{4}{l}{\footnotesize Tabelle aus des Experiments \cite{efficient-operator-placement}, BF = Beschleunigungsfaktor,}\\
+    \multicolumn{4}{l}{\footnotesize QE = Leistungseinbuße, LZ = Laufzeit}\\
     \end{tabular}
 \end{table} \label{experiment-tabelle}
 
@@ -408,22 +413,32 @@ Auffällig ist die Diskrepanz zwischen der Greedy First Fit Implementierung mit 
 Bei Beschleunigungsfaktoren ähnlicher Größenordnung resultieren die verschiedenen Implementierungen 
 in unterschiedlichen Lösungsqualitäten, besonders bei Diamant- und replizierten Topologien.
 
-Lokale Suche ist im Experiment schneller als Tabu Suche, wie zu erwartend. 
-In der Degradation der Performance ist kein klarer Unterschied zu erkennen.
+Lokale Suche ist im Experiment schneller als Tabu Suche, jedoch ist die Qualität der Lösung geringer. 
+Somit bietet die Tabu Suche die beste Operatorplatzierung, mit der längsten Laufzeit. 
+Trotzdem stellt sich die Berechnung als viel effizienter heraus als die optimale Lösung. 
+Während die Laufzeit der optimalen Lösung für replizierte Topologien mehr als 8 Stunden beträgt, benötigt die Tabu Suche 8,2 Minuten. 
+Lokale Suche findet in x Minuten eine Lösung. Dabei beträgt die Qualitätseinbuße bei beiden Methoden 1\%. 
+In der Degradation der Performance ist bei Lokalen Suche und Tabu Suche kein klarer Unterschied zu erkennen. 
 
-Es gibt in diesem Experiment keinen klaren Gewinner. Zwischen den Heuristiken gibt es Kompromisse zwischen Schnelligkeit und Genauigkeit. 
+Es gibt in diesem Experiment keinen Gewinner. Zwischen den Heuristiken gibt es Kompromisse zwischen Schnelligkeit und Genauigkeit. 
 
 \section{Konklusion}
 In dieser Arbeit wurden mehrere Heuristiken vorgestellt, die das NP-schwere Problem der Operatorplatzierung approximieren. 
 Dabei handelt es sich um bekannte Methoden, die auch für andere NP-schwere Probleme utilisiert werden. Mittels einer Straffunktion
-werden die Heuristiken auf QoS Attribute optimiert. 
-Die Heuristiken werden in einem Experiment evaluiert, wobei die Greedy First Fit Heuristik die schnellste Lösung bietet. 
-Jedoch resultiert diese in einer degradierten Lösung. 
-Die Lokale Suche ist eine Erweiterung der Metaheuristik Greedy First Fit.
+werden die Heuristiken auf QoS Attribute optimiert. \\
+Die vorgestellten Heuristiken basieren auf Greedy First Fit und erweitern dessen Funktionalität (Lokale Suche und Tabu Suche).
+Die Heuristiken wurden in einem Experiment für drei verschiedene SVS Architekturen evaluiert. 
+Bei der Evaluation wurde auf die Laufzeit und die Qualität der Lösung eingegangen. 
+Daraus resultierte, dass keine der Heuristiken eine klare Überlegenheit aufweist. 
+Beispielsweise führte die Greedy First Fit Heuristik zu einer schnellen Lösung, die aber qualitativ degradiert war.
+Die Lokale Suche und die Tabu Suche berechneten bessere Platzierungen, erforderten jedoch mehr Zeit.
+Dennoch weisen die Heuristiken eine deutliche Steigerung der Laufzeit gegenüber der optimalen Lösung auf. 
+
 
 
 \section{Ausblick}
 In Zukunft werden wir noch komplexere Heuristiken entwerfen, die das OPP Problem noch besser approximieren. 
+Da die jetzige
 
 \newpage
 \bibliography{biblio}
