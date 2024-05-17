@@ -209,49 +209,46 @@ Dieser Algorithmus durchläuft drei Schritte: Zunächst wird eine initiale Konfi
 Mit dieser Liste wird dann eine initiale Konfiguration $S$ durch den Greedy First Fit Algorithmus erstellt (Zeile 6). \\
 
 
-\noindent
-\begin{minipage}{0.55\textwidth}
+
 Solange bessere Platzierungen der Operatoren gefunden werden, iteriert die lokale Suche über die Konfigurationen  (Zeile (insert)). 
 Eine Verbesserung wird durch einen niedrigeren Wert der Zielfunktion $F$ definiert. 
 Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \textit{co-locate operators, swap resources, Bewegen von Operator}. \\
 
-    Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{co-located} bezeichnet, 
-    wenn $i$ und $j$ zusammen auf einem Rechner platziert sind. Somit befindet sich $i$ und $j$ auf entweder $u$ oder $v$.\\
-    Bei \textit{swap resources} wird der Operator $i$, der auf $u \in G_{res}$ platziert ist, auf eine neue Ressource $v \in G_{res}$ aus $L$ verschoben. 
-    Für den Fall, dass zuerst $n$ Operatoren $j_1, j_2, ..., j_n$auf $u$ alloziert sind, werden diese auf $v$ verschoben. \\ 
-    Die Funktionalität \textit{move single locator}  bewegt nur einen einzelnen Operator $i$ von $u \in G_{res}$ zu $v \in G_{res}$, wobei $v$ aus $L$ ausgewählt wird. 
 
-\end{minipage}
-\hspace{10pt}
-% TODO: übersetzen auf deutsch
-\begin{minipage}{0.5\textwidth} \label{local-search-algo}
-    \begin{algorithm}[H]
-        \caption{Local Search}
-        \begin{algorithmic}[1]
-            \STATE \textbf{function} $\mathrm{localSearch}(G_{dsp}, G_{res})$
-            \STATE \textbf{Input}: $G_{\text{dsp}}$, DSP application graph
-            \STATE \textbf{Input}: $G_{\text{res}}$, computing resource graph
-            \STATE $P \leftarrow$ resources hosting the pinned operators of $G_{\text{dsp}}$
-            \STATE $L \leftarrow$ resources of $G_{\text{res}}$, 
-            sorted by the cumulative link penalty with respect to nodes in $P$
-            \STATE link penalty with respect to nodes in $P$
-            \STATE $S \leftarrow$  solve GreedyFirstFit($G_{\text{dsp}}$, $L$)
-            \STATE \textbf{do}
-    
-            \STATE \hspace{\algorithmicindent} $F \leftarrow$  value of the objective function for $S$
-            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by colocating operators
-            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by swapping resources
-            \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by relocating a single operator
-            \STATE \hspace{\algorithmicindent} $F' \leftarrow$ value of the objective function for S
-    
-            \STATE \textbf{while} $F'  < F$ \textbf{do}
-            \STATE \hspace{\algorithmicindent} \textbf{return} $S$
-            \STATE \textbf{end function}
-        \end{algorithmic}
+\begin{algorithm}[H]
+    \caption{Local Search}
+    \begin{algorithmic}[1]
+        \STATE \textbf{function} $\mathrm{localSearch}(G_{dsp}, G_{res})$
+        \STATE \textbf{Input}: $G_{\text{dsp}}$, DSP application graph
+        \STATE \textbf{Input}: $G_{\text{res}}$, computing resource graph
+        \STATE $P \leftarrow$ resources hosting the pinned operators of $G_{\text{dsp}}$
+        \STATE $L \leftarrow$ resources of $G_{\text{res}}$, 
+        sorted by the cumulative link penalty with respect to nodes in $P$
+        \STATE link penalty with respect to nodes in $P$
+        \STATE $S \leftarrow$  solve GreedyFirstFit($G_{\text{dsp}}$, $L$)
+        \STATE \textbf{do}
+
+        \STATE \hspace{\algorithmicindent} $F \leftarrow$  value of the objective function for $S$
+        \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by colocating operators
+        \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by swapping resources
+        \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by relocating a single operator
+        \STATE \hspace{\algorithmicindent} $F' \leftarrow$ value of the objective function for S
+
+        \STATE \textbf{while} $F'  < F$ \textbf{do}
+        \STATE \hspace{\algorithmicindent} \textbf{return} $S$
+        \STATE \textbf{end function}
+    \end{algorithmic}
 \end{algorithm}
-\end{minipage}
 
-\vspace{0.7cm}
+
+Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{co-located} bezeichnet, 
+wenn $i$ und $j$ zusammen auf einem Rechner platziert sind. Somit befindet sich $i$ und $j$ auf entweder $u$ oder $v$.\\
+Bei \textit{swap resources} wird der Operator $i$, der auf $u \in G_{res}$ platziert ist, auf eine neue Ressource $v \in G_{res}$ aus $L$ verschoben. 
+Für den Fall, dass zuerst $n$ Operatoren $j_1, j_2, ..., j_n$auf $u$ alloziert sind, werden diese auf $v$ verschoben. \\ 
+Die Funktionalität \textit{move single locator}  bewegt nur einen einzelnen Operator $i$ von $u \in G_{res}$ zu $v \in G_{res}$, wobei $v$ aus $L$ ausgewählt wird. 
+
+
+% \vspace{0.7cm}
 Das Zusammenführen von Operatoren auf eine gemeinsame Rechnerressource ermöglicht es, 
 verwandte Aufgaben in eine bessere Lokalität zu platzieren, was QoS verbessern kann. 
 Das Austauschen von Operatoren strebt eine Eliminierung/Minimierung von ressourcelichen Engpässen an. 
@@ -272,21 +269,7 @@ Der Algortihmus kann in die folgenden Schritte unterteilt werden \cite{glover-ta
 Anhand dieser Ausgangslösung wird eine Nachbarschaft bestimmt. Die Nachbarschaft wird um die sogenannten Tabu Züge verkleinert. 
 Aus der resultierenden Nachbarschaft wird die beste Lösung bestimmt und ausgewählt. Am ende der iteration wird die Tabuliste basierend auf einem Tabukriterium aktualisiert.
 
-\noindent
-\begin{minipage}{0.5\textwidth}
-Der Algorithmus startet mit einer Ausgangskonfiguration $S'$, die von der Greedy-First-Fit-Heuristik erstellt wurde (Zeile 6). \\ \\
-Von Zeile 10 bis 21 durchläuft er eine Schleife, die in jeder Iteration nach einer besseren Lösung $S$ in der Nachbarschaft sucht. 
-Diese Suche wird mittels lokaler Suche durchgeführt. Dabei werden Lösungen aus $S$ ausgeschlossen, die in der Tabuliste enthalten sind (Zeile 12). \\ \\
-Die Tabuliste $tabuList$ ist anfangs leer und beinhaltet nach der ersten Iteration die letzten $tabuList_{max}$ Platzierungen. 
-Dadurch wird verhindert, dass die Schleife unendlich iteriert.
-In jeder iteration wird die neue Lösung $S$ mit der Zielfuntion $F$ evaluiert (Zeile 13). %penalty function
-Wenn die jetzige Lösung $S$ besser als die vorherige Lösung $S^*$ ist, wird $S$ als die beste Lösung $S^*$ gespeichert (Zeile 15, 16). \\ \\
 
-Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Ausgangslösung $S'$ verglichen. Die insgesamt beste Lösung wird zurückgegeben. 
-
-\end{minipage}
-\hspace{10pt}
-\begin{minipage}{0.5\textwidth}
 \begin{algorithm}[H]
     \caption{Tabu Search}
     \begin{algorithmic}[1]
@@ -321,9 +304,20 @@ Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Au
     \end{algorithmic}
 \end{algorithm}
 
-\end{minipage}  
 
-\vspace{0.7cm}
+Der Algorithmus startet mit einer Ausgangskonfiguration $S'$, die von der Greedy-First-Fit-Heuristik erstellt wurde (Zeile 6). \\ \\
+Von Zeile 10 bis 21 durchläuft er eine Schleife, die in jeder Iteration nach einer besseren Lösung $S$ in der Nachbarschaft sucht. 
+Diese Suche wird mittels lokaler Suche durchgeführt. Dabei werden Lösungen aus $S$ ausgeschlossen, die in der Tabuliste enthalten sind (Zeile 12). \\ \\
+Die Tabuliste $tabuList$ ist anfangs leer und beinhaltet nach der ersten Iteration die letzten $tabuList_{max}$ Platzierungen. 
+Dadurch wird verhindert, dass die Schleife unendlich iteriert.
+In jeder iteration wird die neue Lösung $S$ mit der Zielfuntion $F$ evaluiert (Zeile 13). %penalty function
+Wenn die jetzige Lösung $S$ besser als die vorherige Lösung $S^*$ ist, wird $S$ als die beste Lösung $S^*$ gespeichert (Zeile 15, 16). \\ \\
+
+Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Ausgangslösung $S'$ verglichen. Die insgesamt beste Lösung wird zurückgegeben. 
+
+
+
+%\vspace{0.7cm}
 
 Mit dieser Heuristik wird der Lösungsraum nach besseren Approximationen des Optimums durchsucht. 
 Im Vergleich zur Greedy First Fit \ref{greedy-first-fit} und der 
@@ -347,59 +341,104 @@ Diesbezüglich werden die Rechnerressourcen und deren Verbindungen definiert, so
 Die drei untersuchten Topologien sind in Abbildung \ref{topologies} dargestellt. Dabei werden simple sequentielle, replicated und Diamaond Topologien verwendet.\\
 
 \noindent
-
-
-\begin{minipage}{0.5\textwidth}
-\includegraphics[width=0.75\linewidth]{topologies.png}
-\captionof{figure}{Sequentiell, replicated, Diamand Topologie}
-\label{topologies}  
+\begin{minipage}{0.45\textwidth}
+    \includegraphics[width=0.75\linewidth]{topologies.png}
+\captionof{figure}{Sequentielle, replizierte und Diamant-Topologie}
+\label{topologies}
 \end{minipage}
 \hspace{10pt}
 \begin{minipage}{0.5\textwidth}
-in den gezeigten topologien hat jede schicht mindestens einen Operator. \\Die erste und letzte Schicht haben jeweils einen Operator, die Quelle und das Becken. 
-Alle Ressourcentopologien haben die glieche anzahl an ressourcen. 
+    In den dargestellten Topologien hat jede Schicht mindestens einen Operator. 
+    Die erste und letzte Schicht verfügen jeweils über einen Operator, die Quelle und das Becken. 
+    Alle Ressourcentopologien haben die gleiche Anzahl an Ressourcen.
 \end{minipage}
 
 
 
+\subsection{Experimentelle Ergebnisse}
 
-\subsection{Experimentergebnisse}
-Für das Experiment werden resolution time (rt) und performance degradation (pd) \cite{efficient-operator-placement} hinzugezogen. Diese Attribute werden mit der optimalen Lösung verglichen. 
-rt beschreibt die benötigte Zeit, um eine Lösung zu finden, pd beschreibt die Abweichung von der optimalen Lösung.
-Zusätzlich wird der Beschleunigugnsfaktor (bf) mit $bf = rt_{optimal} / rt_i$ definiert, wobei $rt_i$ die Zeit für die Heuristik $i$ ist. 
-pf wurde definiert als $pd_i = \frac{F_i - F_{ODP}}{1 - F_{ODP}}$  \cite{efficient-operator-placement}, wobei $F_i$ die Zielfunktion der Heuristik $i$ ist. 
-%odp definieren 
+Für das Experiment werden die Laufzeit (LZ) und die Qualitätseinbuße (QE) betrachtet \cite{efficient-operator-placement}.
+Diese Merkmale werden mit der optimalen Lösung verglichen. Rt beschreibt die benötigte Zeit, 
+um eine Lösung zu finden, pd beschreibt die Abweichung von der optimalen Lösung. 
+Zusätzlich wird der Beschleunigungsfaktor (bf) definiert als $bf = rt_{optimal} / rt_i$, wobei $rt_i$ die Zeit für die Heuristik $i$ ist.
+Le wird definiert als $le_i = \frac{F_i - F_{ODP}}{1 - F_{ODP}}$ \cite{efficient-operator-placement}, 
+wobei $F_i$ die Zielfunktion der Heuristik $i$ ist.
+
+Wie in \ref{OPP-Definition} definiert, werden im Experiment Verfügbarkeit, 
+Netzwerklatenz und Antwortzeit als QoS selektiert und folglich mit der Straffunktion minimiert. 
 
 
-\subsubsection{Auswahl der QoS}
+% ODP definieren
+
 
 \subsubsection{Generelle Ergenisse}
-\begin{table}[htbp]
-    \centering
 
+Die Berechnung der Optimalösung weist eine effiziente Laufzeit für Diamandtopologien basierte auf. 
+Diese Berechnung ist in unter einer Sekunde verfügbar. Bei replizierten und sequentiellen Topolgien benötigt die Berechnung deutlich länger. 
+Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus Tabelle). \\
+\begin{table}[htbp]  
+    \centering
+    \caption{Evaluation der Heuristiken}
     \begin{tabular}{llllll}
     \toprule
-    Policy                           &      & DA        & SA       & RA & Overall Average Value \\
+    Policy                           &       & DA        & SA              & RA                & Overall Average Value                  \\
     \midrule
-    ODP                              &rt 36s&  0.1      & 41.4             & 915.2            &             \\
+    ODP                              &LZ 36s &  0.1      & 41.4             & 915.2            &                  \\
+                                     &LZ 100s&  0.8      & 2174.8           & 32193.9          &                  \\
     \cmidrule{1-5}
-    lokale suche                     &sp    &  0.68     & 150.54           & 353.07           & 215.81      \\
-                                     &rt    &0\%        & 1\%              &4\%               & 1\%         \\
-    tabu suche                       &sp    &  0.31     & 65.91            & 64.93            & 83.53       \\
-                                     &rt    &0\%        & 1\%              &4\%               & 1\%         \\           
-    greedy first fit                 &sp    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
-                                     &rt    &0\%        & 7\%              &5\%               &11\%               \\
-    greedy first fit (keine $\delta$)&sp    &  454.40   & $56 \cdot 10^4$ & $12 \cdot 10^6$ & $11 \cdot 10^6$  \\
-                                     &rt    &34\%       & 7\%              &24\%              & 19\%               \\
+    Lokale Suche                     &BF     &  0.68     & 150.54           & 353.07           & 215.81           \\
+                                     &QE     &0\%        & 1\%              &4\%               & 1\%              \\
+    Tabu Suche                       &BF     &  0.31     & 65.91            & 64.93            & 83.53            \\
+                                     &QE     &0\%        & 1\%              &4\%               & 1\%              \\           
+    Greedy First Fit                 &BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
+                                     &QE     &0\%        & 7\%              &5\%               &11\%              \\
+    Greedy First Fit (keine $\delta$)&BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
+                                     &QE     &34\%       & 7\%              &24\%              & 19\%             \\
     \bottomrule
+    \multicolumn{4}{l}{\footnotesize Tabelle aus des Experiments \cite{efficient-operator-placement}, BF = Beschleunigungsfaktor,}\\
+    \multicolumn{4}{l}{\footnotesize QE = Leistungseinbuße, LZ = Laufzeit}\\
     \end{tabular}
-\end{table}
+\end{table} \label{experiment-tabelle}
 
+
+Die Berechnung der Optimalösung weist eine effiziente Laufzeit für Diamandtopologien basierte auf. 
+Diese Berechnung ist in unter einer Sekunde verfügbar. Bei replizierten und sequentiellen Topolgien benötigt die Berechnung deutlich länger. 
+Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus Tabelle).
+
+Aus Tabelle \ref{experiment-tabelle} ist zu erkennen, dass Greedy First Fit die schnellste Lösung bietet. 
+Da die übrigen Heuristiken auf Greedy First Fit basieren, entspricht das auch den Erwartungen. 
+Trotz des hohen Beschleunigungsfaktors $bf$ liefern Greedy First Fit und Greedy First Fit (ohne $\delta$) degradierte Lösungen. 
+Somit ergibt sich ein Kompromiss zwischen der Qualität der Lösung und der Laufzeit des Algorithmus. 
+Auffällig ist die Diskrepanz zwischen der Greedy First Fit Implementierung mit und ohne Straffunktion $\delta$. 
+Bei Beschleunigungsfaktoren ähnlicher Größenordnung resultieren die verschiedenen Implementierungen 
+in unterschiedlichen Lösungsqualitäten, besonders bei Diamant- und replizierten Topologien.
+
+Lokale Suche ist im Experiment schneller als Tabu Suche, jedoch ist die Qualität der Lösung geringer. 
+Somit bietet die Tabu Suche die beste Operatorplatzierung, mit der längsten Laufzeit. 
+Trotzdem stellt sich die Berechnung als viel effizienter heraus als die optimale Lösung. 
+Während die Laufzeit der optimalen Lösung für replizierte Topologien mehr als 8 Stunden beträgt, benötigt die Tabu Suche 8,2 Minuten. 
+Lokale Suche findet in x Minuten eine Lösung. Dabei beträgt die Qualitätseinbuße bei beiden Methoden 1\%. 
+In der Degradation der Performance ist bei Lokalen Suche und Tabu Suche kein klarer Unterschied zu erkennen. 
+
+Es gibt in diesem Experiment keinen Gewinner. Zwischen den Heuristiken gibt es Kompromisse zwischen Schnelligkeit und Genauigkeit. 
 
 \section{Konklusion}
+In dieser Arbeit wurden mehrere Heuristiken vorgestellt, die das NP-schwere Problem der Operatorplatzierung approximieren. 
+Dabei handelt es sich um bekannte Methoden, die auch für andere NP-schwere Probleme utilisiert werden. Mittels einer Straffunktion
+werden die Heuristiken auf QoS Attribute optimiert. \\
+Die vorgestellten Heuristiken basieren auf Greedy First Fit und erweitern dessen Funktionalität (Lokale Suche und Tabu Suche).
+Die Heuristiken wurden in einem Experiment für drei verschiedene SVS Architekturen evaluiert. 
+Bei der Evaluation wurde auf die Laufzeit und die Qualität der Lösung eingegangen. 
+Daraus resultierte, dass keine der Heuristiken eine klare Überlegenheit aufweist. 
+Beispielsweise führte die Greedy First Fit Heuristik zu einer schnellen Lösung, die aber qualitativ degradiert war.
+Die Lokale Suche und die Tabu Suche berechneten bessere Platzierungen, erforderten jedoch mehr Zeit.
+Dennoch weisen die Heuristiken eine deutliche Steigerung der Laufzeit gegenüber der optimalen Lösung auf. 
 
 
 
+\section{Ausblick}
+In Zukunft werden wir noch komplexere Heuristiken entwerfen, die das OPP Problem noch besser approximieren. 
+Da die jetzige
 
 \newpage
 \bibliography{biblio}
