@@ -49,7 +49,7 @@
 In den vergangenen Jahren wurden Big Data Applikationen stets populärer. 
 Da die Anzahl der Daten umfangreicher wird, werden effiziente Ansätze für 
 verteilte Stream-Datenverarbeitung (SVS) benötigt.
-Das Problem der Operatorlatzierung ist ein entscheidender Performance-Faktor. 
+Das Problem der Operatorlatzierung  ist ein entscheidender Performance-Faktor. 
 Für das Lösen dieses Problems gibt es jedoch keine 
 effiziente Lösung. Diese Arbeit beschäftigt sich mit effizienten heuristischen Methoden, die die optimale Lösung approximieren. 
 \end{abstract}
@@ -89,11 +89,19 @@ Die optimale systematische Position in solch einem System stellt einen maßgebli
     \label{SVS-figure}
 \end{center}
 
+\section{Verwandte Arbeiten}
+Das Problem der Operatorplatzierung (OPP) wurde aufgrund seiner Bedeutung in der Forschung umfassend untersucht. 
+In der Literatur werden verschiedene Aspekte der Operatorplatzierung beleuchtet, wie in den Arbeiten von \cite{survey-placement-strategies,Starks2018} zusammengefasst. 
+Insbesondere konzentriert sich die Forschung auf drei Hauptbereiche: (1) Ziele der optimalen Platzierung, (2) unterschiedliche Optimierungstechniken, und (3) verschiedene Infrastrukturen der verteilten Systeme.
+Im Hinblick auf Optimierungstechniken (Punkt 2) haben mehrere Studien verschiedene Ansätze untersucht. 
+Greedy Heuristiken, wie in \cite{greedy-distr.-svs} beschrieben, bieten eine vorhersagbare und oft schnelle Lösung, die jedoch nicht immer zu optimalen Ergebnissen führt.
+Ein weiterer Forschungsansatz befasst sich mit Metaheuristiken zur Optimierung des OPP. 
+Arbeiten wie \cite{whiteWater} und \cite{latency-estimation-local-search} präsentieren Methoden, die auf Lokaler Suche basieren. Diese Ansätze zielen darauf ab, durch iterative Verbesserungen und das Durchsuchen des Lösungsraums bessere Platzierungsentscheidungen zu treffen.
 
 
 \section{Definitionen}
 Um eine konkrete Optimierung des Problems beschreiben zu können, ist es notwendig, die Problematik formal auszudrücken. 
-Im Folgenden wird eine formale Abstraktion des Operatorplatzierungsproblems vorgestellt. 
+Im Folgenden wird eine formale Abstraktion des OPP vorgestellt. 
 Zuerst werden das Datenstrom- und das Ressourcenmodell \ref{SVS-Definition} definiert. 
 Beide Modelle werden mittels Graphentheorie formuliert und beschreiben ein verteiltes SVS. 
 Anschließend wird das Problem der Operatorplatzierung mithilfe der zuvor definierten Modelle formuliert \ref{OPP-Definition}.
@@ -136,7 +144,7 @@ Ein Operator kann aus politischen, sicherheitstechnischen oder topologischen Gr�
 $i \in V_{svs}$ im Datenstrommodell platziert werden. 
 Für jeden Operator $i \in V_{svs}$ gibt es eine Menge an Kandidatressourcen $V_{res}^i$ (Schreibweise wie in \cite{efficient-operator-placement}).
 
-Das Operatorplatzierungproblem  kann als Zuordnungsproblem zwischen den genannten Modellen formuliert werden. 
+Das OPP kann als Zuordnungsproblem zwischen den genannten Modellen formuliert werden. 
 Die Zuordnungsfunktion wird eingeschränkt, um die zu minimierenden QoS-Attribute zu berücksichtigen. 
 Folglich wird der optimale Kandidat $u$ in den Kandidatenressourcen $V_{res}^i$
 gesucht, damit der Operator $i$ auf Knoten $u$ platziert wird.
@@ -207,7 +215,7 @@ Hierzu müssen Network Delay, Bandbreite und Netzwerkgeschwindigkeit \cite{effic
 \subsection{Greedy First Fit} \label{greedy-first-fit}
 Diese Heuristik wird für das Bin-Packing Problem verwendet, um eine optimale Lösung anzunähern \cite{greedy-first-fit}. 
 Für jeden Operator werden die verfügbaren Ressourcen $v \in V_{res}$ in einer Liste sortiert. Die Sortierung basiert auf der summierte Straffunktion $\delta$
-zwischen $v$ und den angepinnten Operatore $P$. Folglich:
+zwischen $v$ und den angepinnten Operatoren $P$. Folglich:
 
 \[ 
     \begin{gathered}
@@ -252,7 +260,7 @@ Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \
         \STATE \textbf{do}
 
         \STATE \hspace{\algorithmicindent} $F \leftarrow$  value of the objective function for $S$
-        \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by colocating operators
+        \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by co-locating operators
         \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by swapping resources
         \STATE \hspace{\algorithmicindent} $S \leftarrow$  improve $S$ by relocating a single operator
         \STATE \hspace{\algorithmicindent} $F' \leftarrow$ value of the objective function for S
@@ -265,7 +273,7 @@ Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \
 \end{algorithm}
 
 
-Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{kolloziert} bezeichnet, 
+Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{kollokiert} bezeichnet, 
 wenn $i$ und $j$ zusammen auf einem Rechner platziert sind. Somit befindet sich $i$ und $j$ auf entweder $u$ oder $v$.\\
 Beim \textit{Austauschen} wird der Operator $i$, der auf $u \in G_{res}$ platziert ist, auf eine neue Ressource $v \in G_{res}$ aus $L$ verschoben. 
 Für den Fall, dass zuerst $n$ Operatoren $j_1, j_2, ..., j_n$auf $u$ alloziert sind, werden diese auf $v$ verschoben. \\ 
@@ -420,7 +428,7 @@ Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus
     \label{experiment-tabelle}
 \end{table} 
 
-Die Berechnung der Optimalösung weist eine effiziente Laufzeit für Diamandtopologien basierte auf. 
+Die Berechnung der Optimallösung weist eine effiziente Laufzeit für Diamandtopologien basierte auf. 
 Diese Berechnung ist in unter einer Sekunde verfügbar. Bei replizierten und sequentiellen Topolgien benötigt die Berechnung deutlich länger. 
 Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus Tabelle).
 
@@ -454,7 +462,7 @@ Dennoch zeigten alle Heuristiken eine deutliche Verkürzung der Laufzeit im Verg
 
 Zukünftig werden wir komplexere Heuristiken entwickeln, die das OPP-Problem noch besser approximieren können. 
 Die vorgestellten Methoden wurden zur Kompilierzeit verwendet, was bei dynamischen Veränderungen ineffizient ist. 
-Deshalb wollen wir uns auf Heuristiken fokusieren, die zru Laufzeit angepasst werden können.
+Deshalb wollen wir uns auf Heuristiken fokussieren, die zru Laufzeit angepasst werden können.
 Zudem wollen wir die erneute Konfiguration während der Laufzeit analysieren, damit Big Data-Anwendungen auf verändernde Bedingungen reagieren können.
 
 \newpage
