@@ -200,13 +200,15 @@ Die drei Heuristiken werden gekonnt kombiniert und führen somit zu einer besser
 
 \subsection{Straffunktion} 
 % Straffunktion ist für Links, nicht für knoten!
-Die Auswahl von verschiedenen Möglichkeiten $u \in V_{res}^i$ bringt Einbussen mit sich. Diverse Ressourcen haben verschiedene Lokalitäten,
-deren Performance durch Netzwerkdynamiken beeinflusst wird. Da die Daten übertragen werden müssen, kommen nicht vorhersehbare Network Delays dazu. Hierzu müssen Network Delay, 
+Die Auswahl von verschiedenen Möglichkeiten $u \in V_{res}^i$ bringt Einbußen mit sich. 
+Diverse Ressourcen haben verschiedene Lokalitäten,
+deren Performance durch Netzwerkdynamiken beeinflusst wird. 
+Da die Daten übertragen werden müssen, kommen nicht vorhersehbare Network Delays dazu. Hierzu müssen Network Delay, 
 Bandbreite und Netzwerkgeschwindigkeit\cite{efficient-operator-placement} betrachtet werden.
 
 
 \subsection{Greedy First Fit} \label{greedy-first-fit}
-Diese Heuristik wird  für das Bin-Packing Problem verwendet, um eine optimale Lösung anzunähern \cite{greedy-first-fit}. 
+Diese Heuristik wird für das Bin-Packing Problem verwendet, um eine optimale Lösung anzunähern \cite{greedy-first-fit}. 
 Für jeden Operator werden die verfügbaren Ressourcen $v \in V_{res}$ in einer Liste sortiert. Die Sortierung basiert auf der summierte Straffunktion $\delta$
 zwischen $v$ und den angepinnten Operatore $P$. Folglich:
 
