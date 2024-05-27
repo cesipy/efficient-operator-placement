@@ -184,7 +184,7 @@ Es gilt $w_r + w_a + w_z = 1$.
 
 
 Mithilfe einer \textbf{Straffunktion} werden die Verbindungen zwischen zwei spezifischen Knoten bezüglich der QoS-Attribute bewertet. Dadurch wird ein Vergleich 
-der Rechnerressourcen möglich. Dabei werden die Links zwischen $u \in V_{res}^i$ möglich. Auf die Straffunktion wird im Folgenden eingegangen.
+der Rechnerressourcen möglich. Dabei werden die Links zwischen $u \in V_{res}^i$ möglich. Auf die Straffunktion wird im Folgenden eingegangen. 
 
 
 
@@ -207,12 +207,22 @@ das mit einem Greedy Ansatz über einen Teil der Funktion iteriert. Da auch dies
 Verfahren dazu neigt, lokale Optima auszuwählen, wird zusätzlich Tabu Search implementiert. 
 Die drei Heuristiken werden gekonnt kombiniert und führen somit zu einer besseren Approximation. 
 
-\subsection{Straffunktion} 
-% Straffunktion ist für Links, nicht für knoten!
-Die Auswahl von verschiedenen Möglichkeiten $u \in V_{res}^i$ bringt Einbußen mit sich. 
-Diverse Ressourcen haben verschiedene Lokalitäten, deren Performance durch Netzwerk Dynamiken beeinflusst wird. 
-Da die Daten übertragen werden müssen, kommen unvorhersehbare Network Delays hinzu. 
-Hierzu müssen Network Delay, Bandbreite und Netzwerkgeschwindigkeit \cite{efficient-operator-placement} betrachtet werden.
+
+\subsection{Straffunktion}
+% Straffunktion ist für Links, nicht für Knoten!
+Die Auswahl von verschiedenen Möglichkeiten \(u \in V_{res}^i\) bringt Einbußen mit sich. Da die Daten übertragen werden müssen, kommen unvorhersehbare Netzwerklatenzen hinzu. Hierbei müssen Netzwerklatenz, Bandbreite und Netzwerkgeschwindigkeit \cite{efficient-operator-placement} berücksichtigt werden.
+
+Um die Platzierungsentscheidungen zu lenken, benötigen wir eine Metrik, die die Kosten der Nutzung bestimmter Knoten/Link-Ressourcen erfasst. In einem idealen Szenario könnten wir alle Operatoren auf einem einzigen Knoten mit unendlicher Kapazität und Verfügbarkeit platzieren. Da dies in der Praxis nicht möglich ist, müssen die Operatoren auf mehrere Knoten verteilt werden, was zu Netzwerklatenzen und Netzwerkverkehr führt.
+
+Wir führen eine Linkstraffunktion \(\delta(u, v) \in [0, 1]\) ein, die die Verschlechterung der Performance im Vergleich zur idealen Ressource misst. Diese Funktion ist eine gewichtete Kombination der QoS-Attribute des Links \((u, v)\) und der verbundenen Knoten \(u\) und \(v\):
+\[
+\delta(u, v) = w_r \delta_R(u, v) + w_a \delta_A(u, v) + w_z \delta_Z(u, v),
+\]
+wobei \(w_r, w_a, w_z \in [0, 1]\) die Gewichte der einzelnen QoS-Metriken sind. Die Terme \(\delta_R(u, v)\), \(\delta_A(u, v)\) und \(\delta_Z(u, v)\) modellieren die Strafe in Bezug auf Anwendungsantwortzeit, Verfügbarkeit und Netzwerknutzung.
+
+Diese Strafen helfen, die Qualität und Effizienz der Ressourcenverteilung in einem verteilten System zu bewerten und zu optimieren.
+
+
 
 
 \subsection{Greedy First Fit} \label{greedy-first-fit}
