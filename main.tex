@@ -76,7 +76,7 @@ Abbildung \ref{SVS-figure} zeigt ein SVS. Eine Anzahl von Datenquellen $P$ produ
 werden in der Abbildung als $SBON$ bezeichnet. Das Operatorplatzierungproblem (OPP) beschäftigt sich mit der Frage, 
 welche physischen Knoten die Operatoren aufnehmen sollen \cite{network-aware-op}. 
 
-Für die Evaluation solcher Modelle werden diverse Quality-of-Service Attribute herangezogen. 
+Für die Evaluation solcher Modelle werden diverse Quality-of-Service (QoS) Attribute herangezogen. 
 Dazu gehören Durchsatz, Ende-zu-Ende-Latenz und Verfügbarkeit \cite{efficient-operator-placement,cardellini-optimal_operatorplc}.
  Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS-Attribute 
 zu fokussieren, die einfach angepasst werden können \cite{efficient-operator-placement}.
@@ -120,7 +120,6 @@ Beide Systeme werden mit gerichteten, gewichteten zyklenfreien Graphen $G = (V,E
 
 \textit{Datenstrom Modelle} werden durch $G_{svs} = (V_{svs}, E_{svs})$ beschrieben. 
 In diesem Modell beschreiben Knoten $u \in V_{svs}$ Operatoren im System. 
-Zusätzlich sind in $V_{svs}$ Datenquellen und Datenbecken enthalten. 
 Man spricht hierbei von Datenbecken (vgl. sink), einem Punkt, an dem die Berechnungen der Operatoren zusammentreffen. 
 Zu den Operatoren gehören auch sogenannte \textit{angepinnte} Operatoren \cite{efficient-operator-placement}, 
 die Datenquellen und -becken beinhalten. Kanten $(u,v) \in E_{svs}$ beschreiben Datenverkehr
@@ -143,8 +142,7 @@ Funktionen wie \textit{Join}, \textit{Filter} und \textit{Select} aus \cite{netw
 In Abbildung \ref{SVS-figure} sind die mit $SBON$ bezeichneten Knoten die freien Operatoren. Diese umfassen Filter-, Aggregations- und Detektionsoperatoren.
 
 \subsection{Problemformulierung des OPP} \label{OPP-Definition}
-Ein Operator kann aus politischen, sicherheitstechnischen oder topologischen Gründen \cite{cardellini-optimal_operatorplc} nicht auf jedem Knoten 
-$i \in V_{svs}$ im Datenstrommodell platziert werden. 
+Ein Operator kann aus politischen, sicherheitstechnischen oder topologischen Gründen \cite{cardellini-optimal_operatorplc} nicht auf jedem Knoten im Datenstrommodell platziert werden. 
 Für jeden Operator $i \in V_{svs}$ gibt es eine Menge an Kandidatressourcen $V_{res}^i$ (Schreibweise wie in \cite{efficient-operator-placement}).
 
 Das OPP kann als Zuordnungsproblem zwischen den genannten Modellen formuliert werden. 
@@ -176,7 +174,7 @@ Für typische QoS Attribute wie Antwortzeit, Verfügbarkeit und Netzwerkverwendu
         + w_z \frac{Z(x) - Z_{min}}{Z_max - Z_min} 
     \end{gathered}  \label{to-miminize-function}
 \] 
-wo $R(x)$, $A(x)$ und $Z(x)$ die QoS Attribute und $w_r, w_a, w_z \geq 0$ Gewichtungen sind. $R_{min}$, $R_{max}$, $A_{min}$, $A_{max}$, $Z_{min}$ und $Z_{max}$ sind die minimalen und maximalen Werte der QoS Attribute.
+wo $R(x)$, $A(x)$ und $Z(x)$ die QoS-Attribute und $w_r, w_a, w_z \geq 0$ Gewichtungen sind. $R_{min}$, $R_{max}$, $A_{min}$, $A_{max}$, $Z_{min}$ und $Z_{max}$ sind die minimalen und maximalen Werte der QoS Attribute.
 Es gilt $w_r + w_a + w_z = 1$.
 
 
@@ -194,39 +192,38 @@ der Rechnerressourcen möglich. Dabei werden die Links zwischen $u \in V_{res}^i
 Wie in \cite{cardellini-optimal_operatorplc} gezeigt, ist das 
 OPP NP-schwer.
 Da die initiale Platzierung der Operatoren ein tragender Faktor in der Performance ist, werden effiziente Heuristiken benötigt.
-In dieser Arbeit wird eine effiziente Methode vorgestellt, die zu einer approximierten optimalen Lösung führt. 
-Dieser Ansatz beinhaltet eine Kombination mehrerer bekannter Heuristiken, die die Funktion FF aus \ref{to-miminize-function} minimieren. 
-Ein Greedy First-Fit-Ansatz in Kombination mit einer lokalen Suche findet meist lokale Optima. 
-Um dem entgegenzuwirken, wird dieser Ansatz mit einer Tabu-Suche kombiniert. 
-Somit werden häufiger globale Optima gefunden \cite{efficient-operator-placement}.
-Ein Greedy First-Fit Algorithmus wird für das Bin-packing Packing Problem verwendet, 
-aber auch oft für das Operator Placement Problem \cite{k7, k8}.
-Da diese Heuristik meist nur lokale Optima findet, werden andere Ansätze hinzugezogen. 
-Zum einen wird Local-Search verwendet. Dies ist ein Verfahren, 
-das mit einem Greedy Ansatz über einen Teil der Funktion iteriert. Da auch dieses
-Verfahren dazu neigt, lokale Optima auszuwählen, wird zusätzlich Tabu Search implementiert. 
-Die drei Heuristiken werden gekonnt kombiniert und führen somit zu einer besseren Approximation. 
+Unser Ansatz beinhaltet eine Kombination mehrerer bekannter Heuristiken, die die Funktion F aus \ref{to-miminize-function} minimieren. 
+Eine Heuristik ist ein Verfahren, das eine schnelle Lösung für ein Problem liefert, jedoch nicht zwingend optimal ist. 
+
+Greedy First-Fit, lokale Suche und Tabu Suche sind dabei die gängigen Methoden. 
+Greedy First-Fit Ansätze können schnell eine Lösung approximieren, jedoch sind diese nicht immer optimal. Deshalb wird er mit zur lokalen Suche erweitert.
+Für Lösungen höherer Qualität wird die lokale Suche zur Tabu Suche erweitert.
 
 
 \subsection{Straffunktion}
 % Straffunktion ist für Links, nicht für Knoten!
-Die Auswahl von verschiedenen Möglichkeiten \(u \in V_{res}^i\) bringt Einbußen mit sich. Da die Daten übertragen werden müssen, kommen unvorhersehbare Netzwerklatenzen hinzu. Hierbei müssen Netzwerklatenz, Bandbreite und Netzwerkgeschwindigkeit \cite{efficient-operator-placement} berücksichtigt werden.
-
-Um die Platzierungsentscheidungen zu lenken, benötigen wir eine Metrik, die die Kosten der Nutzung bestimmter Knoten/Link-Ressourcen erfasst. In einem idealen Szenario könnten wir alle Operatoren auf einem einzigen Knoten mit unendlicher Kapazität und Verfügbarkeit platzieren. Da dies in der Praxis nicht möglich ist, müssen die Operatoren auf mehrere Knoten verteilt werden, was zu Netzwerklatenzen und Netzwerkverkehr führt.
-
-Wir führen eine Linkstraffunktion \(\delta(u, v) \in [0, 1]\) ein, die die Verschlechterung der Performance im Vergleich zur idealen Ressource misst. Diese Funktion ist eine gewichtete Kombination der QoS-Attribute des Links \((u, v)\) und der verbundenen Knoten \(u\) und \(v\):
+Die Auswahl von verschiedenen Möglichkeiten \(u \in V_{res}^i\) bringt Einbußen mit sich. Da die Daten übertragen werden müssen, kommen unvorhersehbare Netzwerklatenzen hinzu. 
+Hierbei müssen Netzwerklatenz, Bandbreite und Netzwerkgeschwindigkeit \cite{efficient-operator-placement} berücksichtigt werden.
+Um die Platzierungsentscheidungen zu lenken, benötigen wir eine Metrik, die die Kosten der Nutzung bestimmter Knoten/Link-Ressourcen erfasst. 
+In einem idealen Szenario könnten wir alle Operatoren auf einem einzigen Knoten mit unendlicher Kapazität und Verfügbarkeit platzieren. 
+Da dies in der Praxis nicht möglich ist, müssen die Operatoren auf mehrere Knoten verteilt werden, was zu Netzwerklatenzen und Netzwerkverkehr führt.
+Wir führen eine Linkstraffunktion \(\delta(u, v) \in [0, 1]\) ein, die die Verschlechterung der Performance im Vergleich zur idealen Ressource misst. 
+Diese Funktion ist eine gewichtete Kombination der QoS-Attribute des Links \((u, v)\) und der verbundenen Knoten \(u\) und \(v\):
 \[
 \delta(u, v) = w_r \delta_R(u, v) + w_a \delta_A(u, v) + w_z \delta_Z(u, v),
 \]
-wobei \(w_r, w_a, w_z \in [0, 1]\) die Gewichte der einzelnen QoS-Metriken sind. Die Terme \(\delta_R(u, v)\), \(\delta_A(u, v)\) und \(\delta_Z(u, v)\) modellieren die Strafe in Bezug auf Anwendungsantwortzeit, Verfügbarkeit und Netzwerknutzung.
+wobei \(w_r, w_a, w_z \in [0, 1]\) die Gewichte der einzelnen QoS-Metriken sind. 
+Die Terme \(\delta_R(u, v)\), \(\delta_A(u, v)\) und \(\delta_Z(u, v)\) modellieren die Strafe in Bezug auf Anwendungsantwortzeit, Verfügbarkeit und Netzwerknutzung.
 
 Diese Strafen helfen, die Qualität und Effizienz der Ressourcenverteilung in einem verteilten System zu bewerten und zu optimieren.
 
 
 
 
-\subsection{Greedy First Fit} \label{greedy-first-fit}
+\subsection{Greedy First-Fit} \label{greedy-first-fit}
 Diese Heuristik wird für das Bin-Packing Problem verwendet, um eine optimale Lösung anzunähern \cite{greedy-first-fit}. 
+Andere Arbeiten befassten sich schon  mit der Anwendung dieser Methode für das OPP \cite{k7, k8}.
+Wir passen diese Methode an, um die Operatoren auf die verfügbaren Ressourcen zu platzieren. 
 Für jeden Operator werden die verfügbaren Ressourcen $v \in V_{res}$ in einer Liste sortiert. Die Sortierung basiert auf der summierten Straffunktion $\delta$
 zwischen $v$ und den angepinnten Operatoren $P$. Folglich:
 
@@ -248,15 +245,15 @@ Die daraus resultierenden Operatorplatzierungen werden als eine Konfiguration be
 Die lokale Suche ist eine iterative Heuristik zur Optimierung von Lösungen in der Nachbarschaft einer Ausgangskonfiguration. 
 Dabei iteriert diese Methode über die Konfiguration, die aus der Greedy-First-Fit-Heuristik resultiert. 
 Der Algorithmus \ref{local-search-algo} durchläuft drei Schritte: 
-Zunächst wird eine initiale Konfiguration durch den Greedy-First-Fit berechnet. 
+Zunächst wird eine initiale Konfiguration durch den Greedy First-Fit berechnet. 
 Anschließend wird eine Nachbarschaft von ähnlichen Konfigurationen bestimmt, und schließlich wird die beste Lösung in dieser Nachbarschaft gefunden.
 Um die Nachbarschaft zu bestimmen, wird zunächst eine sortierte Liste $L$ erstellt, basierend auf der Straffunktion $\delta$ wie in \ref{greedy-first-fit}.
-Mit dieser Liste wird dann eine initiale Konfiguration $S$ durch den Greedy First Fit Algorithmus erstellt (Zeile 6). \\
+Mit dieser Liste wird dann eine initiale Konfiguration $S$ durch den Greedy First-Fit Algorithmus erstellt (Zeile 6). \\
 
 
 Solange bessere Platzierungen der Operatoren gefunden werden, iteriert die lokale Suche über die Konfigurationen  (Zeile (14)). 
 Eine Verbesserung wird durch einen niedrigeren Wert der Zielfunktion $F$ definiert. 
-Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \textit{Kollokation, Austauschen und Bewegen von Operatoren}. \\
+Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \textit{co-locate, swap und relocate}. \\
 
 
 \begin{algorithm}[H]
@@ -286,17 +283,17 @@ Die Suche nach besseren Konfigurationen basiert auf den drei Funktionalitäten \
 \end{algorithm}
 
 
-Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{kollokiert} bezeichnet, 
+Zwei Operatoren $i,j \in G_{svs}$, wobei $i$ auf $u \in G_{res}$ und $j$ auf $v \in G_{res}$ platziert ist, werden als \textit{co-located} bezeichnet, 
 wenn $i$ und $j$ zusammen auf einem Rechner platziert sind. Somit befindet sich $i$ und $j$ auf entweder $u$ oder $v$.\\
-Beim \textit{Austauschen} wird der Operator $i$, der auf $u \in G_{res}$ platziert ist, auf eine neue Ressource $v \in G_{res}$ aus $L$ verschoben. 
+Beim \textit{swap} wird der Operator $i$, der auf $u \in G_{res}$ platziert ist, auf eine neue Ressource $v \in G_{res}$ aus $L$ verschoben. 
 Für den Fall, dass zuerst $n$ Operatoren $j_1, j_2, ..., j_n$auf $u$ alloziert sind, werden diese auf $v$ verschoben. \\ 
-Die Funktionalität \textit{des Bewegens von Operatoren}  bewegt nur einen einzelnen Operator $i$ von $u \in G_{res}$ zu $v \in G_{res}$, 
+Die Funktionalität \textit{relocate}  bewegt nur einen einzelnen Operator $i$ von $u \in G_{res}$ zu $v \in G_{res}$, 
 wobei $v$ aus $L$ ausgewählt wird. 
 
 
 % \vspace{0.7cm}
 Das Zusammenführen von Operatoren auf eine gemeinsame Rechnerressource ermöglicht es, verwandte Aufgaben in einer besseren Lokalität zu platzieren, 
-was die QoS verbessern kann. 
+was die QoS-Attribute verbessern kann. 
 Das Austauschen von Operatoren strebt eine Eliminierung/Minimierung von Ressourcen bedingten Engpässen an. 
 Durch das Bewegen einzelner Operatoren werden somit auch lokale Engpässe minimiert. 
 Dafür werden die Konfigurationen so angepasst, dass Datenströme gleichmäßig verteilt werden. 
@@ -347,21 +344,20 @@ Durch diese Erweiterung werden Lösungen evaluiert, die bei einer lokalen Suche 
 \end{algorithm}
 
 
-Der Algorithmus startet mit einer Ausgangskonfiguration $S'$, die von der Greedy-First-Fit-Heuristik erstellt wurde (Zeile 6). \\ 
+Der Algorithmus startet mit einer Ausgangskonfiguration $S'$, die von der Greedy First-Fit-Heuristik erstellt wurde (Zeile 6). \\ 
 Von Zeile 10 bis 21 durchläuft er eine Schleife, die in jeder Iteration nach einer besseren Lösung $S$ in der Nachbarschaft sucht. 
-Diese Suche wird mittels lokaler Suche durchgeführt. Dabei werden Lösungen aus $S$ ausgeschlossen, die in der Tabuliste enthalten sind (Zeile 12). \\ \\
+Die Suche wird mittels lokaler Suche durchgeführt. Dabei werden Lösungen aus $S$ ausgeschlossen, die in der Tabuliste enthalten sind (Zeile 12). \\ \\
 Die Tabuliste $tabuList$ ist anfangs leer und beinhaltet nach der ersten Iteration die letzten $tabuList_{max}$ Platzierungen. 
 Dadurch wird verhindert, dass die Schleife unendlich iteriert.
 In jeder Iteration wird die neue Lösung $S$ mit der Zielfunktion $F$ evaluiert (Zeile 13). %Straffunktion
 Wenn die jetzige Lösung $S$ besser als die vorherige Lösung $S^*$ ist, wird $S$ als die beste Lösung $S^*$ gespeichert (Zeile 15, 16). \\ \\
-
 Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Ausgangslösung $S'$ verglichen. Die insgesamt beste Lösung wird zurückgegeben. 
 
 
 %\vspace{0.7cm}
 
 Mit dieser Heuristik wird der Lösungsraum nach besseren Approximationen des Optimums durchsucht. 
-Im Vergleich zur Greedy First Fit \ref{greedy-first-fit} und der 
+Im Vergleich zur Greedy First-Fit \ref{greedy-first-fit} und der 
 lokalen Suche \ref{local-search} bietet die Tabu-Suche eine erweiterte Fähigkeit zur Exploration 
 des Lösungsraums und kann somit zu verbesserten Lösungen führen.
 
@@ -369,7 +365,7 @@ des Lösungsraums und kann somit zu verbesserten Lösungen führen.
 % vgl greedy, greedy no delta, local search, tabu search tabelle aus paper
 \section{Evaluation}
 Die oben angeführten Heuristiken \ref{Heurisiken} werden in einem Experiment aus \cite{efficient-operator-placement} evaluiert. 
-Für das Experiment werden die drei Heuristiken Greedy First Fit, Greedy First Fit ohne Straffunktion und die lokale Suche verglichen. 
+Für das Experiment werden die drei Heuristiken Greedy First-Fit, Greedy First-Fit ohne Straffunktion und die lokale Suche verglichen. 
 Als Bezugsnorm wird die optimale Lösung des Operatorplatzierungsproblems verwendet. 
 Im Experiment von \cite{efficient-operator-placement} werden mehrere Heuristiken bewertet, die hier der Einfachheit halber nicht aufgeführt werden. 
 Auch die genauen Details der Hardware sind nicht relevant für die Evaluation.
@@ -411,9 +407,7 @@ Netzwerklatenz und Antwortzeit als QoS selektiert und folglich mit der Straffunk
 
 % ODP definieren
 
-
-\subsubsection{Generelle Ergenisse}
-Die Berechnung der Optimallösung weist eine effiziente Laufzeit für Diamand-Topologien auf. 
+Die Berechnung der Optimallösung weist eine effiziente Laufzeit für Diamant-Topologien auf. 
 Diese Berechnung ist in unter einer Sekunde verfügbar. Bei replizierten und sequentiellen Topologien benötigt die Berechnung deutlich länger. 
 Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus Tabelle). \\
 \begin{table}[htbp]  
@@ -430,9 +424,9 @@ Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus
                                      &QE     &0\%        & 1\%              &4\%               & 1\%              \\
     Tabu Suche                       &BF     &  0.31     & 65.91            & 64.93            & 83.53            \\
                                      &QE     &0\%        & 1\%              &4\%               & 1\%              \\           
-    Greedy First Fit                 &BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
+    Greedy First-Fit                 &BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
                                      &QE     &0\%        & 7\%              &5\%               &11\%              \\
-    Greedy First Fit (keine $\delta$)&BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
+    Greedy First-Fit (keine $\delta$)&BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
                                      &QE     &34\%       & 7\%              &24\%              & 19\%             \\
     \bottomrule
     \multicolumn{4}{l}{\footnotesize Tabelle aus des Experiments \cite{efficient-operator-placement}, BF = Beschleunigungsfaktor,}\\
@@ -441,15 +435,11 @@ Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus
     \label{experiment-tabelle}
 \end{table} 
 
-Die Berechnung der Optimallösung weist eine effiziente Laufzeit für Diamant-Topologien auf. 
-Diese Berechnung ist in unter einer Sekunde verfügbar. Bei replizierten und sequentiellen Topolgien benötigt die Berechnung deutlich länger. 
-Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus Tabelle).
-
-Aus Tabelle \ref{experiment-tabelle} ist zu erkennen, dass Greedy First Fit die schnellste Lösung bietet. 
-Da die übrigen Heuristiken auf Greedy First Fit basieren, entspricht das auch den Erwartungen. 
-Trotz des hohen Beschleunigungsfaktors $bf$ liefern Greedy First Fit und Greedy First Fit (ohne $\delta$) degradierte Lösungen. 
+Aus Tabelle \ref{experiment-tabelle} ist zu erkennen, dass Greedy First-Fit die schnellste Lösung bietet. 
+Da die übrigen Heuristiken auf Greedy First-Fit basieren, entspricht das auch den Erwartungen. 
+Trotz des hohen Beschleunigungsfaktors $bf$ liefern Greedy First-Fit und Greedy First-Fit (ohne $\delta$) degradierte Lösungen. 
 Somit ergibt sich ein Kompromiss zwischen der Qualität der Lösung und der Laufzeit des Algorithmus. 
-Auffällig ist die Diskrepanz zwischen der Greedy First Fit Implementierung mit und ohne Straffunktion $\delta$. 
+Auffällig ist die Diskrepanz zwischen der Greedy First-Fit Implementierung mit und ohne Straffunktion $\delta$. 
 Bei Beschleunigungsfaktoren ähnlicher Größenordnung resultieren die verschiedenen Implementierungen 
 in unterschiedlichen Qualitäten der Lösung, besonders bei Diamant- und replizierten Topologien.
 
@@ -465,11 +455,11 @@ Es gibt in diesem Experiment keinen Gewinner. Zwischen den Heuristiken gibt es K
 \section{Konklusion und Ausblick}In dieser Arbeit wurden mehrere Heuristiken vorgestellt, die das NP-schwere Problem der Operatorplatzierung approximieren.
 Dabei handelt es sich um bekannte Methoden, die auch für andere NP-schwere Probleme genutzt werden. 
 Mittels einer Straffunktion wurden die Heuristiken auf QoS-Attribute optimiert.\\
-Die vorgestellten Heuristiken basieren auf dem Greedy First Fit-Ansatz und erweitern dessen Funktionalität durch Methoden wie lokale Suche und Tabu Suche. 
+Die vorgestellten Heuristiken basieren auf dem Greedy First-Fit Ansatz und erweitern dessen Funktionalität durch Methoden wie lokale Suche und Tabu Suche. 
 Diese Heuristiken wurden in einem Experiment für drei verschiedene SVS-Architekturen evaluiert. 
 Bei der Evaluation wurden sowohl die Laufzeit als auch die Qualität der Lösungen betrachtet. 
 Es zeigte sich, dass keine der Heuristiken eine klare Überlegenheit aufweist. 
-Beispielsweise führte die Greedy First Fit-Heuristik zu schnellen, jedoch qualitativ minderwertigen Lösungen, 
+Beispielsweise führte die Greedy First-Fit Heuristik zu schnellen, jedoch qualitativ minderwertigen Lösungen, 
 während die lokale Suche und die Tabu Suche qualitativ bessere Platzierungen erreichten, jedoch mehr Zeit benötigten. 
 Dennoch zeigten alle Heuristiken eine deutliche Verkürzung der Laufzeit im Vergleich zur Berechnung der optimalen Lösung.\\\\
 
