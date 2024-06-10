@@ -157,7 +157,7 @@ auf dem Rechner $u$ platziert wird, andernfalls $x_{i,u} = 0$.
 
 \[ 
     \begin{gathered}
-        \operatorname*{arg\,min}_\theta F(x) \\
+        \operatorname*{arg\,min}_x F(x) \\
         \sum_{i \in V_{svs}} C_i x_{i,u} < C_u \quad \forall u \in V_{res} \\ % constrain: node resource
         \sum_{u \in V_{res}^i} x_{i,u} = 1 \quad \forall i \in V_{dsp} \\ % constrain: node only placed on candidate resources
         x_{i,u} \in \{0,1\} \quad \forall i \in V_{svs}, u \in V_{res}^i
@@ -415,10 +415,10 @@ Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus
     \caption{Evaluation der Heuristiken}
     \begin{tabular}{llllll}
     \toprule
-    Policy                           &       & DA        & SA              & RA                & Overall Average Value                  \\
+    Methode                          &       & DA        & SA              & RA                & Durschnitt       \\
     \midrule
-    ODP                              &LZ 36s &  0.1      & 41.4             & 915.2            &                  \\
-                                     &LZ 100s&  0.8      & 2174.8           & 32193.9          &                  \\
+    ODP                              &LZ     &  0.1      & 41.4             & 915.2            &                  \\
+                                     &LZ     &  0.8      & 2174.8           & 32193.9          &                  \\
     \cmidrule{1-5}
     Lokale Suche                     &BF     &  0.68     & 150.54           & 353.07           & 215.81           \\
                                      &QE     &0\%        & 1\%              &4\%               & 1\%              \\
