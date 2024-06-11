@@ -1,51 +1,60 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Data
-methods = ['ODP', 'Lokale Suche', 'Tabu Suche', 'Greedy First-Fit', 'Greedy First-Fit (keine δ)']
-BF_LZ = [0.1, 0.68, 0.31, 454.40, 454.40]
-BF_SA = [41.4, 150.54, 65.91, 56e4, 56e4]
-BF_RA = [915.2, 353.07, 64.93, 12e6, 12e6]
-BF_Avg = [None, 215.81, 83.53, 11e6, 11e6]
+# Data from the table
+methods = [
+    "ODP", "ODP", "Greedy First-Fit", "Greedy First-Fit", 
+    "Greedy First-Fit (keine $\\delta$)", "Greedy First-Fit (keine $\\delta$)",
+    "Lokale Suche", "Lokale Suche", "Tabu Suche", "Tabu Suche"
+]
 
-QE_LZ = [None, 0, 0, 0, 34]
-QE_SA = [None, 1, 1, 7, 7]
-QE_RA = [None, 4, 4, 5, 24]
-QE_Avg = [None, 1, 1, 11, 19]
+labels = ["LZ", "LZ", "LZ", "QE", "LZ", "QE", "LZ", "QE", "LZ", "QE"]
+SA_values = [41.4, 2174.8, 0.06, 0.07, 0.057, 0.07, 213.9, 0.01, 493.1, 0.01]
+RA_values = [915.2, 32193.9, 0.00001, 0.05, 0.00001, 0.24, 91.1, 0.04, 495.8, 0.04]
 
-# Bar plot for BF
-x = np.arange(len(methods))
-width = 0.2
+# Convert percentages to decimal for consistency in QE
+for i in range(len(labels)):
+    if labels[i] == "QE":
+        SA_values[i] *= 100
+        RA_values[i] *= 100
 
-fig, ax1 = plt.subplots(figsize=(12, 8))
+# Create separate lists for each type (LZ and QE)
+methods_lz = [methods[i] for i in range(len(labels)) if labels[i] == "LZ"]
+SA_lz = [SA_values[i] for i in range(len(labels)) if labels[i] == "LZ"]
+RA_lz = [RA_values[i] for i in range(len(labels)) if labels[i] == "LZ"]
 
-rects1 = ax1.bar(x - 1.5*width, BF_LZ, width, label='LZ')
-rects2 = ax1.bar(x - 0.5*width, BF_SA, width, label='SA')
-rects3 = ax1.bar(x + 0.5*width, BF_RA, width, label='RA')
-rects4 = ax1.bar(x + 1.5*width, BF_Avg, width, label='Average')
+methods_qe = [methods[i] for i in range(len(labels)) if labels[i] == "QE"]
+SA_qe = [SA_values[i] for i in range(len(labels)) if labels[i] == "QE"]
+RA_qe = [RA_values[i] for i in range(len(labels)) if labels[i] == "QE"]
 
-# Add some text for labels, title and custom x-axis tick labels, etc.
-ax1.set_xlabel('Methods')
-ax1.set_ylabel('Values')
-ax1.set_title('BF (Best Fit) Metrics')
-ax1.set_xticks(x)
-ax1.set_xticklabels(methods)
-ax1.legend()
+x_lz = np.arange(len(methods_lz))
+x_qe = np.arange(len(methods_qe))
 
-fig.tight_layout()
+fig, ax = plt.subplots(2, 1, figsize=(10, 12))
 
-# Line plot for QE
-fig, ax2 = plt.subplots(figsize=(12, 8))
+# Bar plot for LZ with log scale
+width = 0.35
+ax[0].bar(x_lz - width/2, SA_lz, width, label='SA')
+ax[0].bar(x_lz + width/2, RA_lz, width, label='RA')
 
-ax2.plot(methods[1:], QE_LZ[1:], marker='o', label='LZ')
-ax2.plot(methods[1:], QE_SA[1:], marker='o', label='SA')
-ax2.plot(methods[1:], QE_RA[1:], marker='o', label='RA')
-ax2.plot(methods[1:], QE_Avg[1:], marker='o', label='Average')
+ax[0].set_xlabel('Methods')
+ax[0].set_ylabel('Values')
+ax[0].set_title('LZ Values (Log Scale)')
+ax[0].set_xticks(x_lz)
+ax[0].set_xticklabels(methods_lz, rotation=45, ha='right')
+ax[0].legend()
+ax[0].set_yscale('log')
 
-# Add some text for labels, title and custom x-axis tick labels, etc.
-ax2.set_xlabel('Methods')
-ax2.set_ylabel('Percentage')
-ax2.set_title('QE (Quality Estimation) Metrics')
-ax2.legend()
+# Bar plot for QE
+ax[1].bar(x_qe - width/2, SA_qe, width, label='SA')
+ax[1].bar(x_qe + width/2, RA_qe, width, label='RA')
 
+ax[1].set_xlabel('Methods')
+ax[1].set_ylabel('Values')
+ax[1].set_title('QE Values')
+ax[1].set_xticks(x_qe)
+ax[1].set_xticklabels(methods_qe, rotation=45, ha='right')
+ax[1].legend()
+
+plt.tight_layout()
 plt.show()
