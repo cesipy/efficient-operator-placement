@@ -468,6 +468,31 @@ Die vorgestellten Methoden wurden zur Kompilierzeit verwendet, was bei dynamisch
 Deshalb wollen wir uns auf Heuristiken fokussieren, die zur Laufzeit angepasst werden können.
 Zudem wollen wir die erneute Konfiguration während der Laufzeit analysieren, damit Big Data-Anwendungen auf verändernde Bedingungen reagieren können.
 
+
+\begin{table}[htbp]  
+    \centering
+    \caption{Evaluation der Heuristiken}
+    \begin{tabular}{llll}
+    \toprule
+    Methode                          &       & SA              & RA                \\
+    \midrule
+    ODP                              &LZ     & 41.4             & 915.2            \\
+                                     &LZ     & 2174.8           & 32193.9          \\
+    \cmidrule{1-4}
+    Greedy First-Fit                 &LZ     & 0.06  & 0.00001  \\
+                                     &QE     & 7\%              &5\%               \\
+    Greedy First-Fit (keine $\delta$)&LZ     & 0.057             & 0.00001  \\
+                                     &QE     & 7\%              &24\%              \\
+    Lokale Suche                     &LZ     & 213.9           &91.1          \\
+                                     &QE     & 1\%              &4\%               \\
+    Tabu Suche                       &LZ     & 493.1            & 495.8         \\
+                                     &QE     & 1\%              &4\%               \\           
+
+    \bottomrule
+    \multicolumn{4}{l}{\footnotesize BF = Beschleunigungsfaktor, QE = Qualitätseinbuße, LZ = Laufzeit (s)}\\
+    \end{tabular}
+
+\end{table} 
 \newpage
 \bibliography{biblio}
 
