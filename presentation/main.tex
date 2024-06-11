@@ -1,15 +1,15 @@
 \documentclass{beamer}
 \usepackage{graphicx} 
 \usepackage{amsmath}  
-\usepackage{lmodern}  % font package
+\usepackage{lmodern}  
 
 
-\usepackage{beamerthemesplit} % Activate split theme
-\usecolortheme{seahorse} % Color theme
-\usefonttheme{professionalfonts} % Use professional fonts
-\setbeamertemplate{navigation symbols}{} % Remove navigation symbols
-\setbeamertemplate{footline}[frame number] % Display frame number in footer
-\useoutertheme{miniframes} % Use miniframes outer theme
+\usepackage{beamerthemesplit} 
+\usecolortheme{seahorse} % style
+\usefonttheme{professionalfonts} 
+\setbeamertemplate{navigation symbols}{} % rm  latex navigation symbols
+\setbeamertemplate{footline}[frame number] % show number of pages
+\useoutertheme{miniframes} % style
 
 
 
@@ -41,7 +41,7 @@
         \item Berechnung optimaler Operatorplatzierung ist NP-schwer! \\
         $\rightarrow$ Approximierung durch bekannte Heuristiken
     \end{itemize}
-    \item Ziel: Latenz, Netzwerkauslastung, Durchsatz, Verfügbarkeit, etc. minimieren
+    \item Ziel: Latenz, Netzwerkauslastung, Verfügbarkeit, etc. optimieren
 \end{itemize}
 \end{frame}
 
@@ -80,6 +80,7 @@
 \frametitle{Problem der Operatorplatzierung}
 \begin{itemize}
     \item Mapping zwischen \textit{Datenstrom- } und \textit{Ressourcen-Modell} ($G_{svs}$ und $G_{res}$)
+    \item Möglichst effizient - Minimierung von Quality of Service Attributen
 \end{itemize}
 \begin{center}
     \includegraphics[width=0.6\textwidth]{res/OPP-graph.png} \\
@@ -90,13 +91,13 @@
 \begin{frame}
 \frametitle{Formale Definition des OPPs}
 \begin{itemize}
-    \item Formal definiert mit
+    \item Formal definiert mit:
 \end{itemize}
 \begin{center}
 \[
 \begin{gathered}
     \operatorname*{arg\,min}_x F(x) \\
-    \sum_{i \in V_{svs}} C_i x_{i,u} < C_u \quad \forall u \in V_{res} \\ % constrain: node resource
+    \sum_{i \in V_{svs}} C_i x_{i,u} < C_u \quad \forall u \in V_{res}  \\ % constrain: node resource
     \sum_{u \in V_{res}^i} x_{i,u} = 1 \quad \forall i \in V_{dsp} \\ % constrain: node only placed on candidate resources
     x_{i,u} \in \{0,1\} \quad \forall i \in V_{svs}, u \in V_{res}^i
 \end{gathered}
@@ -115,7 +116,7 @@
 % Section: Heuristiken
 \section{Heuristiken}
 \begin{frame}
-\frametitle{Heuristiken}
+\frametitle{Heuristiken - Greedy First-Fit}
 \begin{itemize}
     \item Näherungsverfahren zur Lösung von Optimierungsproblemen
     \item \textbf{Greedy First-Fit}: 
@@ -133,7 +134,7 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Lokale Suche}
+\frametitle{Heuristiken - Lokale Suche}
 \begin{itemize}
     \item Erweiterung von Greedy First-Fit
     \item Ziel: Verbesserung der initialen Lösung
@@ -148,7 +149,7 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Tabu Suche}
+\frametitle{Heuristiken - Tabu Suche}
 \begin{itemize}
     \item Aufbauend auf Greedy und Lokaler Suche: \textit{Tabu Suche}
     \begin{itemize}
