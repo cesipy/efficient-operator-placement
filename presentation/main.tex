@@ -13,7 +13,7 @@
 
 
 
-\title{Heuristiken für effiziente Operatorplatzierung in verteilten Stream-Verarbeitungssystemen}
+\title{Heuristische Optimierung der Operatorplatzierung in verteilten Stream-Verarbeitungssystemen}
 \author{Cedric Sillaber}
 \date{June 2024}
 
@@ -35,7 +35,7 @@
 \begin{frame}
 \frametitle{Motivation}
 \begin{itemize}
-    \item Verteilte Stream-Verarbeitungssysteme bestehen aus etlichen physischen Rechnern.
+    \item Verteilte Stream-Verarbeitungssysteme bestehen aus vielen physischen Rechnern
     \item Welcher Rechner führt welche Operationen aus?
     \begin{itemize}
         \item Berechnung optimaler Operatorplatzierung ist NP-schwer! \\
@@ -67,7 +67,7 @@
     \begin{itemize}
         \item Was sind Quellen, was sind Senken? Wohin fließen Daten?
         \item Wo sollte sortiert, gefiltert, gejoint werden?
-        \item Dargestellt mit $G_{svs} = (V_{svs}, E_{svs})$
+        \item dargestellt mit $G_{svs} = (V_{svs}, E_{svs})$
     \end{itemize}
     \item \textit{Ressourcen-Modell} beschreibt physische Rechner und deren Verknüpfungen
     \begin{itemize}
@@ -145,6 +145,7 @@
     \item Vorteil: Bessere Lösung als Greedy First-Fit allein
     \item Nachteil: Höherer Berechnungsaufwand
 \end{itemize}
+
 \includegraphics[width=0.5\textwidth]{res/algorithmus-lokale-suche.png}
 \end{frame}
 
@@ -166,7 +167,7 @@
 \begin{itemize}
     \item Vergleich der Heuristiken Greedy First-Fit, Lokaler Suche und Tabu Suche
     \item Metriken: Antwortzeit, Netzwerklatenz und Verfügbarkeit
-    \item Vergleich von Laufzeit und Beschleunigungsfaktor für zwei Topologien
+    \item Vergleich von Laufzeit und Qualität für zwei Topologien
 \end{itemize}
 \vspace{0.3cm}
 \end{frame}
