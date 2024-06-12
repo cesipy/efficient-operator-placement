@@ -474,22 +474,21 @@ Zudem wollen wir die erneute Konfiguration während der Laufzeit analysieren, da
     \caption{Evaluation der Heuristiken}
     \begin{tabular}{llll}
     \toprule
-    Methode                          &       & SA              & RA                \\
+    Methode                          &       & SA               & RA                \\
     \midrule
-    ODP                              &LZ     & 41.4             & 915.2            \\
-                                     &LZ     & 2174.8           & 32193.9          \\
+    ODP                              &LZ     & 2174.8           & 32193.9           \\
     \cmidrule{1-4}
-    Greedy First-Fit                 &LZ     & 0.06  & 0.00001  \\
-                                     &QE     & 7\%              &5\%               \\
-    Greedy First-Fit (keine $\delta$)&LZ     & 0.057             & 0.00001  \\
-                                     &QE     & 7\%              &24\%              \\
-    Lokale Suche                     &LZ     & 213.9           &91.1          \\
-                                     &QE     & 1\%              &4\%               \\
-    Tabu Suche                       &LZ     & 493.1            & 495.8         \\
-                                     &QE     & 1\%              &4\%               \\           
+    Greedy First-Fit                 &LZ     & 0.06             & 0.00005           \\
+                                     &QE     & 7\%              &5\%                \\
+    Greedy First-Fit (keine $\delta$)&LZ     & 0.057            & 0.00001           \\
+                                     &QE     & 7\%              &24\%               \\
+    Lokale Suche                     &LZ     & 213.9            &91.1               \\
+                                     &QE     & 1\%              &4\%                \\
+    Tabu Suche                       &LZ     & 493.1            & 495.8             \\
+                                     &QE     & 1\%              &4\%                \\           
 
     \bottomrule
-    \multicolumn{4}{l}{\footnotesize BF = Beschleunigungsfaktor, QE = Qualitätseinbuße, LZ = Laufzeit (s)}\\
+    \multicolumn{4}{l}{\footnotesize QE = Qualitätseinbuße, LZ = Laufzeit (s)}\\
     \end{tabular}
 
 \end{table} 
