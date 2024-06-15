@@ -1,0 +1,212 @@
+\documentclass{beamer}
+\usepackage{graphicx} 
+\usepackage{amsmath}  
+\usepackage{lmodern}  
+
+
+\usepackage{beamerthemesplit} 
+\usecolortheme{seahorse} % style
+\usefonttheme{professionalfonts} 
+\setbeamertemplate{navigation symbols}{} % rm  latex navigation symbols
+\setbeamertemplate{footline}[frame number] % show number of pages
+\useoutertheme{miniframes} % style
+
+
+
+\title{Heuristische Optimierung der Operatorplatzierung in verteilten Stream-Verarbeitungssystemen}
+\author{Cedric Sillaber}
+\date{June 2024}
+
+\begin{document}
+
+
+\frame{\titlepage}
+
+%\begin{frame}
+%\frametitle{Inhalt}
+%\tableofcontents
+%\end{frame}
+
+\setbeamertemplate{itemize item}{\raisebox{0.1ex}{\scriptsize\textbullet}}
+\setbeamertemplate{itemize subitem}{\raisebox{0.1ex}{\scriptsize\textopenbullet}}
+
+
+\section{Motivation}
+\begin{frame}
+\frametitle{Motivation}
+\begin{itemize}
+    \item Verteilte Stream-Verarbeitungssysteme bestehen aus vielen physischen Rechnern
+    \item Welcher Rechner führt welche Operationen aus?
+    \begin{itemize}
+        \item Berechnung optimaler Operatorplatzierung ist NP-schwer! \\
+        $\rightarrow$ Approximierung durch bekannte Heuristiken
+    \end{itemize}
+    \item Ziel: Latenz, Netzwerkauslastung, Verfügbarkeit, etc. optimieren
+\end{itemize}
+\end{frame}
+
+
+\section{Operatorplatzierung}
+\begin{frame}
+\frametitle{Was ist ein Operator?}
+\begin{itemize}
+    \item Verarbeitungseinheit in einem Stream-Verarbeitungssystem
+    \item Beispiele: Filter, Aggregatoren, Joins
+\end{itemize}
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{res/SVS.png} \\
+    \tiny \color{gray} Quelle: P. Pietzuch et al., Network-aware operator placement for stream-processing systems.
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Formale Definition von Streamverarbeitungssystemen}
+\begin{itemize}
+    \item Zwei Modelle, definiert durch gerichtete gewichtete Graphen $G= (V,E)$
+    \item \textit{Datenstrom-Modell} beschreibt den Fluss von Datenströmen
+    \begin{itemize}
+        \item Was sind Quellen, was sind Senken? Wohin fließen Daten?
+        \item Wo sollte sortiert, gefiltert, gejoint werden?
+        \item dargestellt mit $G_{svs} = (V_{svs}, E_{svs})$
+    \end{itemize}
+    \item \textit{Ressourcen-Modell} beschreibt physische Rechner und deren Verknüpfungen
+    \begin{itemize}
+        \item dargestellt mit $G_{res} = (V_{res}, E_{res})$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Problem der Operatorplatzierung}
+\begin{itemize}
+    \item Mapping zwischen \textit{Datenstrom- } und \textit{Ressourcen-Modell} ($G_{svs}$ und $G_{res}$)
+    \item Möglichst effizient - Minimierung von Quality of Service Attributen
+\end{itemize}
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{res/OPP-graph.png} \\
+    \tiny \color{gray} Quelle: Matteo Nardelli et al., Efficient Operator Placement for Distributed Data Stream Processing Applications
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Formale Definition des OPPs}
+\begin{itemize}
+    \item Formal definiert mit:
+\end{itemize}
+\begin{center}
+\[
+\begin{gathered}
+    \operatorname*{arg\,min}_x F(x) \\
+    \sum_{i \in V_{svs}} C_i x_{i,u} < C_u \quad \forall u \in V_{res}  \\ % constrain: node resource
+    \sum_{u \in V_{res}^i} x_{i,u} = 1 \quad \forall i \in V_{dsp} \\ % constrain: node only placed on candidate resources
+    x_{i,u} \in \{0,1\} \quad \forall i \in V_{svs}, u \in V_{res}^i
+\end{gathered}
+\]
+\item Zu minimierende Funktion $F$:
+\[
+\begin{gathered}
+    F(x) = w_r \frac{R(x) - R_{min}}{R_{max} - R_{min}} 
+    + w_a \frac{\log A_{max} - \log A(x)}{\log A_{max} - \log A_{min}} 
+    + w_z \frac{Z(x) - Z_{min}}{Z_{max} - Z_{min}} 
+\end{gathered} \label{to-minimize-function}
+\]
+\end{center}
+\end{frame}
+
+% Section: Heuristiken
+\section{Heuristiken}
+\begin{frame}
+\frametitle{Heuristiken - Greedy First-Fit}
+\begin{itemize}
+    \item Näherungsverfahren zur Lösung von Optimierungsproblemen
+    \item \textbf{Greedy First-Fit}: 
+    \begin{itemize}
+        \item Physische Ressourcen basierend auf Straffunktion sortiert (\textit{greedy})
+        \item Erster passender Rechner nimmt Operator auf (\textit{first-fit})
+        \item Vorteil: Einfachheit, schnelle Berechnungen
+        \item Nachteil: Kann in lokalen Optima steckenbleiben
+    \end{itemize}
+\end{itemize}
+\begin{center}
+    \includegraphics[width=0.5\textwidth]{res/Local-Global-Optimum.png} \\
+    \tiny \color{gray} Quelle: https://www.allaboutlean.com/polca-pros-and-cons/local-global-optimum/
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Heuristiken - Lokale Suche}
+\begin{itemize}
+    \item Erweiterung von Greedy First-Fit
+    \begin{itemize}
+        \item Verschiebung von Operatoren zwischen Rechnern zur Optimierung
+    \end{itemize}
+    \item Vorteil: Bessere Lösung als Greedy First-Fit allein
+    \item Nachteil: Höherer Berechnungsaufwand
+\end{itemize}
+    \begin{center}
+        \includegraphics[width=0.62\textwidth]{res/algorithmus-lokale-suche.png}
+    \end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Heuristiken - Tabu Suche}
+\begin{itemize}
+    \item Aufbauend auf Greedy und Lokaler Suche: \textit{Tabu Suche}
+    \item Verschiedene Anfangslösungen, die in Tabu-Liste gespeichert werden
+    \begin{itemize}
+        \item Vorteil: Noch bessere Lösung
+        \item Nachteil: Noch höherer Berechnungsaufwand
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Section: Experimentelle Ergebnisse
+\section{Experimentelle Ergebnisse}
+\begin{frame}
+\frametitle{Experimentelle Ergebnisse}
+\begin{itemize}
+    \item Vergleich der Heuristiken Greedy First-Fit, Lokaler Suche und Tabu Suche
+    \item Metriken: Antwortzeit, Netzwerklatenz und Verfügbarkeit
+    \item Vergleich von Laufzeit und Qualität für zwei Topologien
+\end{itemize}
+\vspace{0.3cm}
+\end{frame}
+
+\begin{frame}
+\frametitle{Vergleich der Heuristiken}
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{res/evaluation.png} 
+\end{center}
+
+\begin{itemize}
+    \item Optimale Lösung benötigt 8h, Greedy First-Fit Bruchteil einer Sekunde.
+    \item  \textit{Kompromiss} zwischen Qualität und Laufzeit
+\end{itemize}
+\end{frame}
+
+% Section: Fazit
+\section{Fazit}
+\begin{frame}
+\frametitle{Fazit}
+\begin{itemize}
+    \item Greedy First-Fit, Lokale- und Tabu Suche bieten effiziente Lösungen für das Operatorplatzierungsproblem.
+    \begin{itemize}
+        \item Greedy First-Fit: schnelle, aber minderwertige Lösungen.
+        \item Lokale Suche und Tabu Suche: qualitativ besser, aber zeitintensiver.
+    \end{itemize}
+    \item Alle Heuristiken zeigen deutliche Verkürzung der Laufzeit
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Zukunftsaussichten}
+\begin{itemize}
+    \item Entwicklung komplexerer Heuristiken zur besseren Approximation des OPP-Problems.
+    \item Fokussierung auf zur Laufzeit anpassbare Heuristiken für dynamische Bedingungen.
+    \item Analyse der Heuristiken für Real-Life Topologien.
+\end{itemize}
+\end{frame}
+
+\end{document}
