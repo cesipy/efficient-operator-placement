@@ -65,7 +65,9 @@ Zudem gab es Inkonsistenzen zwischen den Namen der Heuristiken. Die Namen wurden
 Zusätzlich wurde darauf hingewiesen, dass der Separator von NP-schwer und Greedy First-Fit Ansätze 
 vereinheitlicht werden sollten. Dem stimme ich nicht zu. Für NP-schwer wird typischerweise ein Bnidestrich verwendet. 
 
-Nach der Revision von Reviewer 1 wurde ein kurzer Überblick über die Struktur der Arbeit hinzugefügt.
+Nach der Revision von Reviewer 1 wurde ein kurzer Überblick über die Struktur der Arbeit hinzugefügt. Zusätzlich wurde der Abschnitt \ref{SVS-Definition} und \ref{OPP-Definition} überarbeitet. 
+Abbildung \ref{topologies} wurde vergrößert und etwas besser strukturiert. Wie Reviewer 1 angemerkt hat, war die Tabelle \ref{experiment-tabelle} etwas unverständlich. Somit wurde sie überarbeitet. 
+
 
 
 
@@ -137,8 +139,10 @@ Beide Systeme werden mit gerichteten, gewichteten zyklenfreien Graphen $G = (V,E
 
 
 \textcolor{red}{\textit{Datenstrommodelle}} werden durch $G_{svs} = (V_{svs}, E_{svs})$ beschrieben. 
-In diesem Modell beschreiben Knoten $u \in V_{svs}$ Operatoren im System. 
-Man spricht hierbei von Datenbecken (vgl. sink), einem Punkt, an dem die Berechnungen der Operatoren zusammentreffen. 
+\textcolor{red}{Hier wird der Fluss der Daten definiert}
+In diesem Modell beschreiben Knoten $u \in V_{svs}$ Operatoren \textcolor{red}{, Quellen und Senken} im System. 
+\textcolor{red}{Datenquellen stellen Knoten dar, die kontinuierlich Daten produzieren. Produzierte Daten werden über Operatoren verarbeitet und zu den Datenbecken geschickt. 
+Datenbecken stellen den Endpunkt des Systems dar. Nachdem Daten von den verteilten Rechnern verarbeitet wurden, werden sie in den Datenbecken gespeichert.} 
 Zu den Operatoren gehören auch sogenannte \textit{angepinnte} Operatoren \cite{efficient-operator-placement}, 
 die Datenquellen und -becken beinhalten. Kanten $(u,v) \in E_{svs}$ beschreiben Datenverkehr
 zwischen den Operatoren $u$ und $v$.  Ein Stream ist ein kontinuierliche Sequenz von Daten. \\
@@ -160,7 +164,9 @@ Funktionen wie \textit{Join}, \textit{Filter} und \textit{Select} aus \cite{netw
 In Abbildung \ref{SVS-figure} sind die mit $SBON$ bezeichneten Knoten die freien Operatoren. Diese umfassen Filter-, Aggregations- und Detektionsoperatoren.
 
 \subsection{Problemformulierung des OPP} \label{OPP-Definition}
-Ein Operator kann aus politischen, sicherheitstechnischen oder topologischen Gründen \cite{cardellini-optimal_operatorplc} nicht auf jedem Knoten im Datenstrommodell platziert werden. 
+\textcolor{red}{Ein Operator kann aus verschiedenen Gründen nicht auf jedem Knoten im Datenstrommodell platziert werden. Diese Gründe können politischer, 
+sicherheitstechnischer oder topologischer Natur sein \cite{cardellini-optimal_operatorplc}. 
+Weitere mögliche Gründe sind beispielsweise technische Restriktionen oder organisatorische Vorschriften.}
 Für jeden Operator $i \in V_{svs}$ gibt es eine Menge an Kandidatressourcen $V_{res}^i$ (Schreibweise wie in \cite{efficient-operator-placement}).
 
 Das OPP kann als Zuordnungsproblem zwischen den genannten Modellen formuliert werden. 
@@ -258,7 +264,7 @@ Die daraus resultierenden Operatorplatzierungen werden als eine Konfiguration be
 %greedy frist fit no delta beschreiben
 
 
-
+\newpage
 \subsection{Lokale Suche} \label{local-search}
 Die lokale Suche ist eine iterative Heuristik zur Optimierung von Lösungen in der Nachbarschaft einer Ausgangskonfiguration. 
 Dabei iteriert diese Methode über die Konfiguration, die aus der Greedy-First-Fit-Heuristik resultiert. 
@@ -319,7 +325,7 @@ Sobald keine Verbesserungen mehr gefunden werden, terminiert die lokale Suche un
 Dabei ist es wichtig zu beachten, dass diese Heuristik, wie \ref{greedy-first-fit}, nur eine Approximation ist und in einer lokal-optimalen Lösung enden kann.
 
  
-
+\newpage
 \subsection{Tabusuche}
 Die heuristische lokale Suche ist abhängig von der initialen Konfiguration und terminiert nur bedingt 
 mit einer globalen optimalen Lösung für das OPP. Um dem entgegenzuwirken, 
@@ -396,13 +402,13 @@ Diesbezüglich werden die Rechnerressourcen und deren Verbindungen definiert, so
 Die drei untersuchten Topologien sind in Abbildung \ref{topologies} dargestellt. Dabei werden einfache sequentielle, replizierte und Diamant-Topologien betrachtet. \\
 
 \noindent
-\begin{minipage}{0.45\textwidth}
-    \includegraphics[width=0.75\linewidth]{res/topologies.png}
+\begin{minipage}{0.5\textwidth}
+    \includegraphics[width=0.9\linewidth]{res/topologies.png}
 \captionof{figure}{Sequentielle, replizierte und Diamant-Topologie, Quelle: \cite{efficient-operator-placement}. }
 \label{topologies}
 \end{minipage}
 \hspace{10pt}
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.45\textwidth}
     In den dargestellten Topologien hat jede Schicht mindestens einen Operator. 
     Die erste und letzte Schicht verfügen jeweils über einen Operator, die Quelle und das Becken. 
     Alle Ressourcentopologien haben die gleiche Anzahl an Ressourcen.
@@ -433,22 +439,22 @@ Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus
     \caption{Evaluation der Heuristiken}
     \begin{tabular}{llllll}
     \toprule
-    Methode                          &       & DA        & SA              & RA                & Durschnitt       \\
+    Methode                          &       & \textcolor{red}{Diamand}        & \textcolor{red}{Sequentiell}            & \textcolor{red}{Repliziert}                & Durchschnitt       \\
     \midrule
     ODP                              &LZ     &  0.1      & 41.4             & 915.2            &                  \\
                                      &LZ     &  0.8      & 2174.8           & 32193.9          &                  \\
     \cmidrule{1-5}
     Lokale Suche                     &BF     &  0.68     & 150.54           & 353.07           & 215.81           \\
                                      &QE     &0\%        & 1\%              &4\%               & 1\%              \\
-    Tabusuche                       &BF     &  0.31     & 65.91            & 64.93            & 83.53            \\
+    Tabusuche                       &BF      &  0.31     & 65.91            & 64.93            & 83.53            \\
                                      &QE     &0\%        & 1\%              &4\%               & 1\%              \\           
     Greedy First-Fit                 &BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
                                      &QE     &0\%        & 7\%              &5\%               &11\%              \\
     Greedy First-Fit (keine $\delta$)&BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
                                      &QE     &34\%       & 7\%              &24\%              & 19\%             \\
     \bottomrule
-    \multicolumn{4}{l}{\footnotesize Tabelle aus des Experiments \cite{efficient-operator-placement}, BF = Beschleunigungsfaktor,}\\
-    \multicolumn{4}{l}{\footnotesize QE = Leistungseinbuße, LZ = Laufzeit}\\
+    \multicolumn{5}{l}{\footnotesize Tabelle aus des Experiments \cite{efficient-operator-placement}, \textcolor{red}{Vergleich für dre Topologien (Diamand, Sequentiell, Repliziert)}}\\
+    \multicolumn{5}{l}{\footnotesize BF = Beschleunigungsfaktor, QE = Leistungseinbuße, LZ = Laufzeit}\\
     \end{tabular}
     \label{experiment-tabelle}
 \end{table} 
