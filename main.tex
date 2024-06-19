@@ -58,17 +58,12 @@ effiziente Lösung. Diese Arbeit beschäftigt sich mit effizienten heuristischen
 \end{abstract}
 
 \section{Revision der Seminararbeit auf Basis der Gutachten}
-Von Reviewer 2 gab es einige Hinweise für die Kohärenz zwischen deutschen und englischen Begriffen. 
-Beispielsweis wurde in der Originalfassung Ressourcenmodell auseinander geschrieben  "Ressourcen Modell". 
-Das selbe gilt für Datenstrommodell.
-Zudem gab es Inkonsistenzen zwischen den Namen der Heuristiken. Die Namen wurden nach dem Hinweis auf "Tabusuche" und "Greedy First-Fit angepasst.
-Zusätzlich wurde darauf hingewiesen, dass der Separator von NP-schwer und Greedy First-Fit Ansätze 
-vereinheitlicht werden sollten. Dem stimme ich nicht zu. Für NP-schwer wird typischerweise ein Bnidestrich verwendet. 
 
-Nach der Revision von Reviewer 1 wurde ein kurzer Überblick über die Struktur der Arbeit hinzugefügt. Zusätzlich wurde der Abschnitt \ref{SVS-Definition} und \ref{OPP-Definition} überarbeitet. 
-Abbildung \ref{topologies} wurde vergrößert und etwas besser strukturiert. Wie Reviewer 1 angemerkt hat, war die Tabelle \ref{experiment-tabelle} etwas unverständlich. Somit wurde sie überarbeitet. 
+Reviewer 2 hat mehrere Hinweise zur Kohärenz zwischen deutschen und englischen Begriffen gegeben. Beispielsweise wurde im Originaltext "Ressourcenmodell" fälschlicherweise als "Ressourcen Modell" geschrieben. Das gleiche Problem bestand beim "Datenstrommodell". Diese Begriffe wurden nun korrekt zusammen geschrieben.
 
+Es gab auch Inkonsistenzen bei den Namen der Heuristiken. Die Bezeichnungen wurden entsprechend den Hinweisen auf "Tabusuche" und "Greedy First-Fit" angepasst. Ein weiterer Hinweis betraf die Vereinheitlichung des Separators in den Begriffen "NP-schwer" und "Greedy First-Fit". Hier stimme ich nicht zu, da für "NP-schwer" typischerweise ein Bindestrich verwendet wird.
 
+Nach der Revision durch Reviewer 1 wurde ein kurzer Überblick über die Struktur der Arbeit hinzugefügt. Außerdem wurden die Abschnitte \ref{SVS-Definition} und \ref{OPP-Definition} überarbeitet. Abbildung \ref{topologies} wurde vergrößert und besser strukturiert. Wie Reviewer 1 angemerkt hat, war die Tabelle \ref{experiment-tabelle} etwas unverständlich, daher wurde sie überarbeitet.
 
 
 \section{Einführung}
@@ -94,7 +89,7 @@ welche physischen Knoten die Operatoren aufnehmen sollen \cite{network-aware-op}
 
 Für die Evaluation solcher Modelle werden diverse Quality-of-Service (QoS) Attribute herangezogen. 
 Dazu gehören Durchsatz, Ende-zu-Ende-Latenz und Verfügbarkeit \cite{efficient-operator-placement,cardellini-optimal_operatorplc}.
- Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS-Attribute 
+Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS-Attribute 
 zu fokussieren, die einfach angepasst werden können \cite{efficient-operator-placement}.
 
 Diese Arbeit fokussiert sich auf einen Ansatz, der bekannte Heuristiken kombiniert und das Optimum effizient approximiert. 
@@ -133,16 +128,16 @@ Anschließend wird das Problem der Operatorplatzierung mithilfe der zuvor defini
 \subsection{Definition von SVS}  \label{SVS-Definition}  % evt "formale definition ..."
 %In diesem Abschnitt werden die Grundlagen verteilter Stream-Verarbeitungssysteme eingegangen. Wir geben eine formale Darstellung SVSs und geben eine Definition für das Operatorplatzierungs Problem. Zu 
 SVSs basieren auf einer Anzahl an verteilten Computer-Ressourcen, die zusammen ein komplexes System ergeben. 
-Dieser Sachverhalt kann mittels Graphentheorie beschrieben werden. Grundsätzlich gibt es zwei Abstraktionen solcher Systeme. 
-Erstens das \textcolor{red}{Datenstrommodell} und zweitens das \textcolor{red}{Ressourcenmodell}. 
+Dieser Sachverhalt kann mittels Graphentheorie beschrieben werden. Grundsätzlich gibt es zwei Abstraktionen solcher Systeme:
+das \textcolor{red}{\textit{Datenstrommodell}} und das \textcolor{red}{\textit{Ressourcenmodell}}. 
 Beide Systeme werden mit gerichteten, gewichteten zyklenfreien Graphen $G = (V,E)$ dargestellt. \\
 
 
 \textcolor{red}{\textit{Datenstrommodelle}} werden durch $G_{svs} = (V_{svs}, E_{svs})$ beschrieben. 
-\textcolor{red}{Hier wird der Fluss der Daten definiert}
+\textcolor{red}{Hier wird der Fluss der Daten definiert.}
 In diesem Modell beschreiben Knoten $u \in V_{svs}$ Operatoren \textcolor{red}{, Quellen und Senken} im System. 
 \textcolor{red}{Datenquellen stellen Knoten dar, die kontinuierlich Daten produzieren. Produzierte Daten werden über Operatoren verarbeitet und zu den Datenbecken geschickt. 
-Datenbecken stellen den Endpunkt des Systems dar. Nachdem Daten von den verteilten Rechnern verarbeitet wurden, werden sie in den Datenbecken gespeichert.} 
+Datenbecken stellen einen Endpunkt im System dar. Nachdem Daten von den verteilten Rechnern verarbeitet wurden, werden sie in den Datenbecken gespeichert.} 
 Zu den Operatoren gehören auch sogenannte \textit{angepinnte} Operatoren \cite{efficient-operator-placement}, 
 die Datenquellen und -becken beinhalten. Kanten $(u,v) \in E_{svs}$ beschreiben Datenverkehr
 zwischen den Operatoren $u$ und $v$.  Ein Stream ist ein kontinuierliche Sequenz von Daten. \\
