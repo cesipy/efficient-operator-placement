@@ -21,7 +21,7 @@
           \vspace{1cm} % Add some vertical space
           
           
-          \includegraphics[width=7cm]{res/universitaet-innsbruck-logo.jpg} \\
+          \includegraphics[width=7cm]{res/universitaet-innsbruck-logo.eps} \\
           \Large
           Institut f\"ur Informatik \\
           \vspace{1cm}
@@ -59,7 +59,7 @@ effiziente Lösung. Diese Arbeit beschäftigt sich mit effizienten heuristischen
 
 \section{Revision der Seminararbeit auf Basis der Gutachten}
 
-Reviewer 2 hat mehrere Hinweise zur Kohärenz zwischen deutschen und englischen Begriffen gegeben. Beispielsweise wurde im Originaltext "Ressourcenmodell" fälschlicherweise als "Ressourcen Modell" geschrieben. Das gleiche Problem bestand beim "Datenstrommodell". Diese Begriffe wurden nun korrekt zusammen geschrieben.
+Reviewer 2 hat mehrere Hinweise zur Kohärenz zwischen deutschen und englischen Begriffen gegeben. Beispielsweise wurde im Originaltext 'Ressourcenmodell' fälschlicherweise als 'Ressourcen Modell' geschrieben. Das gleiche Problem bestand beim "Datenstrommodell". Diese Begriffe wurden nun korrekt zusammen geschrieben.
 
 Es gab auch Inkonsistenzen bei den Namen der Heuristiken. Die Bezeichnungen wurden entsprechend den Hinweisen auf "Tabusuche" und "Greedy First-Fit" angepasst. Ein weiterer Hinweis betraf die Vereinheitlichung des Separators in den Begriffen "NP-schwer" und "Greedy First-Fit". Hier stimme ich nicht zu, da für "NP-schwer" typischerweise ein Bindestrich verwendet wird.
 
@@ -98,7 +98,7 @@ Die optimale systematische Position in solch einem System stellt einen maßgebli
 
 
 \begin{center}
-    \includegraphics[width=0.5\linewidth]{res/SVS.png}
+    \includegraphics[width=0.5\linewidth]{res/SVS.eps}
     \captionof{figure}{Stream Verarbeitungssystem, Quelle: \cite{network-aware-op}.} 
     \label{SVS-figure}
 \end{center}
@@ -381,7 +381,7 @@ lokalen Suche \ref{local-search} bietet die Tabusuche eine erweiterte Fähigkeit
 des Lösungsraums und kann somit zu verbesserten Lösungen führen.
 
 
-% vgl greedy, greedy no delta, local search, tabu search tabelle aus paper
+
 \section{Evaluation}
 Die oben angeführten Heuristiken \ref{Heurisiken} werden in einem Experiment aus \cite{efficient-operator-placement} evaluiert. 
 Für das Experiment werden die drei Heuristiken Greedy First-Fit, Greedy First-Fit ohne Straffunktion und die lokale Suche verglichen. 
@@ -398,7 +398,7 @@ Die drei untersuchten Topologien sind in Abbildung \ref{topologies} dargestellt.
 
 \noindent
 \begin{minipage}{0.5\textwidth}
-    \includegraphics[width=0.9\linewidth]{res/topologies.png}
+    \includegraphics[width=0.9\linewidth]{res/topologies.eps}
 \captionof{figure}{Sequentielle, replizierte und Diamant-Topologie, Quelle: \cite{efficient-operator-placement}. }
 \label{topologies}
 \end{minipage}
@@ -423,8 +423,6 @@ wobei $F_i$ die Zielfunktion der Heuristik $i$ ist.
 Wie in \ref{OPP-Definition} definiert, werden im Experiment Verfügbarkeit, 
 Netzwerklatenz und Antwortzeit als QoS selektiert und folglich mit der Straffunktion minimiert. 
 
-
-% ODP definieren
 
 Die Berechnung der Optimallösung weist eine effiziente Laufzeit für Diamant-Topologien auf. 
 Diese Berechnung ist in unter einer Sekunde verfügbar. Bei replizierten und sequentiellen Topologien benötigt die Berechnung deutlich länger. 
