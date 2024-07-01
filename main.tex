@@ -17,12 +17,14 @@
 \begin{titlepage}
       \begin{center}
           \Huge
-          \text{Universit\"at Innsbruck} \\
+         % \text{Universit\"at Innsbruck} \\
           \vspace{1cm} % Add some vertical space
+          
+          
+          \includegraphics[width=7cm]{res/universitaet-innsbruck-logo.eps} \\
           \Large
           Institut f\"ur Informatik \\
           \vspace{1cm}
-          \includegraphics[width=7cm]{res/universitaet-innsbruck-logo.jpg}
 
           \Huge
           \textbf{Heuristische Optimierung der Operatorplatzierung in verteilten Stream-Verarbeitungssystemen} \\
@@ -55,6 +57,15 @@ Für das Lösen dieses Problems gibt es jedoch keine
 effiziente Lösung. Diese Arbeit beschäftigt sich mit effizienten heuristischen Methoden, die die optimale Lösung approximieren. 
 \end{abstract}
 
+\section{Revision der Seminararbeit auf Basis der Gutachten}
+
+Reviewer 2 hat mehrere Hinweise zur Kohärenz zwischen deutschen und englischen Begriffen gegeben. Beispielsweise wurde im Originaltext 'Ressourcenmodell' fälschlicherweise als 'Ressourcen Modell' geschrieben. Das gleiche Problem bestand beim "Datenstrommodell". Diese Begriffe wurden nun korrekt zusammen geschrieben.
+
+Es gab auch Inkonsistenzen bei den Namen der Heuristiken. Die Bezeichnungen wurden entsprechend den Hinweisen auf "Tabusuche" und "Greedy First-Fit" angepasst. Ein weiterer Hinweis betraf die Vereinheitlichung des Separators in den Begriffen "NP-schwer" und "Greedy First-Fit". Hier stimme ich nicht zu, da für "NP-schwer" typischerweise ein Bindestrich verwendet wird.
+
+Nach der Revision durch Reviewer 1 wurde ein kurzer Überblick über die Struktur der Arbeit hinzugefügt. Außerdem wurden die Abschnitte \ref{SVS-Definition} und \ref{OPP-Definition} überarbeitet. Abbildung \ref{topologies} wurde vergrößert und besser strukturiert. Wie Reviewer 1 angemerkt hat, war die Tabelle \ref{experiment-tabelle} etwas unverständlich, daher wurde sie überarbeitet.
+
+
 \section{Einführung}
 Im Zuge der fortschreitenden Digitalisierung hat sich die Datenverarbeitung zu einem zentralen Aspekt der modernen Welt entwickelt.
 Der Erfolg vieler Unternehmen beruht auf der Fähigkeit, kontinuierlich anfallende Datenmengen effizient zu verarbeiten.
@@ -78,7 +89,7 @@ welche physischen Knoten die Operatoren aufnehmen sollen \cite{network-aware-op}
 
 Für die Evaluation solcher Modelle werden diverse Quality-of-Service (QoS) Attribute herangezogen. 
 Dazu gehören Durchsatz, Ende-zu-Ende-Latenz und Verfügbarkeit \cite{efficient-operator-placement,cardellini-optimal_operatorplc}.
- Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS-Attribute 
+Der Ansatz in dieser Arbeit versucht sich auf generalisierte QoS-Attribute 
 zu fokussieren, die einfach angepasst werden können \cite{efficient-operator-placement}.
 
 Diese Arbeit fokussiert sich auf einen Ansatz, der bekannte Heuristiken kombiniert und das Optimum effizient approximiert. 
@@ -87,10 +98,14 @@ Die optimale systematische Position in solch einem System stellt einen maßgebli
 
 
 \begin{center}
-    \includegraphics[width=0.5\linewidth]{res/SVS.png}
+    \includegraphics[width=0.5\linewidth]{res/SVS.eps}
     \captionof{figure}{Stream Verarbeitungssystem, Quelle: \cite{network-aware-op}.} 
     \label{SVS-figure}
 \end{center}
+
+\textcolor{red}{Die Arbeit ist wie folgt strukturiert: In Abschnitt 3 werden verwandte Arbeiten vorgestellt. 
+Darauf folgt ein Abschnitt mit den wichtigsten Definition für die Formulierung des Optimierungsproblems. Anschließend werden Heursitiken vorgestellt, die das Optimierungsproblem approximieren.  
+In Abschnitt 6 werden die vorgestellten Heuristiken in einem Experiment evaluiert.}
 
 \section{Verwandte Arbeiten}
 Das Problem der Operatorplatzierung (OPP) wurde aufgrund seiner Bedeutung in der Forschung umfassend untersucht. 
@@ -105,28 +120,30 @@ Arbeiten wie \cite{whiteWater} und \cite{latency-estimation-local-search} präse
 \section{Definitionen}
 Um eine konkrete Optimierung des Problems beschreiben zu können, ist es notwendig, die Problematik formal auszudrücken. 
 Im Folgenden wird eine formale Abstraktion des OPP vorgestellt. 
-Zuerst werden das Datenstrom- und das Ressourcenmodell \ref{SVS-Definition} definiert. 
+Zuerst werden das Datenstrom- und das Ressourcenmodell \textcolor{red}{(}\ref{SVS-Definition}\textcolor{red}{)} definiert. 
 Beide Modelle werden mittels Graphentheorie formuliert und beschreiben ein SVS. 
-Anschließend wird das Problem der Operatorplatzierung mithilfe der zuvor definierten Modelle formuliert \ref{OPP-Definition}.
+Anschließend wird das Problem der Operatorplatzierung mithilfe der zuvor definierten Modelle formuliert \textcolor{red}{(}\ref{OPP-Definition}\textcolor{red}{)}.
 
 
 \subsection{Definition von SVS}  \label{SVS-Definition}  % evt "formale definition ..."
 %In diesem Abschnitt werden die Grundlagen verteilter Stream-Verarbeitungssysteme eingegangen. Wir geben eine formale Darstellung SVSs und geben eine Definition für das Operatorplatzierungs Problem. Zu 
 SVSs basieren auf einer Anzahl an verteilten Computer-Ressourcen, die zusammen ein komplexes System ergeben. 
-Dieser Sachverhalt kann mittels Graphentheorie beschrieben werden. Grundsätzlich gibt es zwei Abstraktionen solcher Systeme. 
-Erstens das Datenstrom Modell und zweitens das Ressourcen Modell. 
+Dieser Sachverhalt kann mittels Graphentheorie beschrieben werden. Grundsätzlich gibt es zwei Abstraktionen solcher Systeme:
+das \textcolor{red}{\textit{Datenstrommodell}} und das \textcolor{red}{\textit{Ressourcenmodell}}. 
 Beide Systeme werden mit gerichteten, gewichteten zyklenfreien Graphen $G = (V,E)$ dargestellt. \\
 
 
-\textit{Datenstrom Modelle} werden durch $G_{svs} = (V_{svs}, E_{svs})$ beschrieben. 
-In diesem Modell beschreiben Knoten $u \in V_{svs}$ Operatoren im System. 
-Man spricht hierbei von Datenbecken (vgl. sink), einem Punkt, an dem die Berechnungen der Operatoren zusammentreffen. 
+\textcolor{red}{\textit{Datenstrommodelle}} werden durch $G_{svs} = (V_{svs}, E_{svs})$ beschrieben. 
+\textcolor{red}{Hier wird der Fluss der Daten definiert.}
+In diesem Modell beschreiben Knoten $u \in V_{svs}$ Operatoren \textcolor{red}{, Quellen und Senken} im System. 
+\textcolor{red}{Datenquellen stellen Knoten dar, die kontinuierlich Daten produzieren. Produzierte Daten werden über Operatoren verarbeitet und zu den Datenbecken geschickt. 
+Datenbecken stellen einen Endpunkt im System dar. Nachdem Daten von den verteilten Rechnern verarbeitet wurden, werden sie in den Datenbecken gespeichert.} 
 Zu den Operatoren gehören auch sogenannte \textit{angepinnte} Operatoren \cite{efficient-operator-placement}, 
 die Datenquellen und -becken beinhalten. Kanten $(u,v) \in E_{svs}$ beschreiben Datenverkehr
 zwischen den Operatoren $u$ und $v$.  Ein Stream ist ein kontinuierliche Sequenz von Daten. \\
 
 
-\textit{Ressourcen Modelle} werden durch den Graphen $G_{res} = (V_{res}, E_{res})$ dargestellt. 
+\textcolor{red}{\textit{Ressourcenmodelle}} werden durch den Graphen $G_{res} = (V_{res}, E_{res})$ dargestellt. 
 Dabei wird der logische Zusammenschluss zwischen verfügbaren Computing Ressourcen beschrieben. Der Knoten $u \in V_{res}$ 
 repräsentiert solch eine Ressource. In diesem Modell beschreiben Kanten $(u,v) \in E_{res}$ 
 eine logische Verknüpfung zwischen den Rechnerressourcen $u$ und $v$.
@@ -142,7 +159,9 @@ Funktionen wie \textit{Join}, \textit{Filter} und \textit{Select} aus \cite{netw
 In Abbildung \ref{SVS-figure} sind die mit $SBON$ bezeichneten Knoten die freien Operatoren. Diese umfassen Filter-, Aggregations- und Detektionsoperatoren.
 
 \subsection{Problemformulierung des OPP} \label{OPP-Definition}
-Ein Operator kann aus politischen, sicherheitstechnischen oder topologischen Gründen \cite{cardellini-optimal_operatorplc} nicht auf jedem Knoten im Datenstrommodell platziert werden. 
+\textcolor{red}{Ein Operator kann aus verschiedenen Gründen nicht auf jedem Knoten im Datenstrommodell platziert werden. Diese Gründe können politischer, 
+sicherheitstechnischer oder topologischer Natur sein \cite{cardellini-optimal_operatorplc}. 
+Weitere mögliche Gründe sind beispielsweise technische Restriktionen oder organisatorische Vorschriften.}
 Für jeden Operator $i \in V_{svs}$ gibt es eine Menge an Kandidatressourcen $V_{res}^i$ (Schreibweise wie in \cite{efficient-operator-placement}).
 
 Das OPP kann als Zuordnungsproblem zwischen den genannten Modellen formuliert werden. 
@@ -150,7 +169,7 @@ Die Zuordnungsfunktion wird eingeschränkt, um die zu minimierenden QoS-Attribut
 Folglich wird der optimale Kandidat $u$ in den Kandidatenressourcen $V_{res}^i$
 gesucht, damit der Operator $i$ auf Knoten $u$ platziert wird.
 Hierbei bezieht sich das Problem auf die Inkonsistenz zwischen 
-logisch benachbarten Operatoren im Ressourcen Modell $G_{res}$ und optimalen Entscheidungen der Operatoren im Datenstrom Modell $G_{svs}$.
+logisch benachbarten Operatoren im \textcolor{red}{Ressourcenmodell} $G_{res}$ und optimalen Entscheidungen der Operatoren im Datenstrom Modell $G_{svs}$.
 
 Um das Problem formal zu definieren, verwenden wir den binären Ausdruck $x_{i,u}$ $i \in V_{svs}, u \in V_{res}: x_{i,u} = 1$ wenn Operator $i$
 auf dem Rechner $u$ platziert wird, andernfalls $x_{i,u} = 0$.
@@ -195,9 +214,9 @@ Da die initiale Platzierung der Operatoren ein tragender Faktor in der Performan
 Unser Ansatz beinhaltet eine Kombination mehrerer bekannter Heuristiken, die die Funktion F aus \ref{to-miminize-function} minimieren. 
 Eine Heuristik ist ein Verfahren, das eine schnelle Lösung für ein Problem liefert, jedoch nicht zwingend optimal ist. 
 
-Greedy First-Fit, lokale Suche und Tabu Suche sind dabei die gängigen Methoden. 
+Greedy First-Fit, lokale Suche und \textcolor{red}{Tabusuche} sind dabei die gängigen Methoden. 
 Greedy First-Fit Ansätze können schnell eine Lösung approximieren, jedoch sind diese nicht immer optimal. Deshalb wird er mit zur lokalen Suche erweitert.
-Für Lösungen höherer Qualität wird die lokale Suche zur Tabu Suche erweitert.
+Für Lösungen höherer Qualität wird die lokale Suche zur Tabusuche erweitert.
 
 
 \subsection{Straffunktion}
@@ -240,7 +259,7 @@ Die daraus resultierenden Operatorplatzierungen werden als eine Konfiguration be
 %greedy frist fit no delta beschreiben
 
 
-
+\newpage
 \subsection{Lokale Suche} \label{local-search}
 Die lokale Suche ist eine iterative Heuristik zur Optimierung von Lösungen in der Nachbarschaft einer Ausgangskonfiguration. 
 Dabei iteriert diese Methode über die Konfiguration, die aus der Greedy-First-Fit-Heuristik resultiert. 
@@ -301,11 +320,11 @@ Sobald keine Verbesserungen mehr gefunden werden, terminiert die lokale Suche un
 Dabei ist es wichtig zu beachten, dass diese Heuristik, wie \ref{greedy-first-fit}, nur eine Approximation ist und in einer lokal-optimalen Lösung enden kann.
 
  
-
-\subsection{Tabu Suche}
+\newpage
+\subsection{Tabusuche}
 Die heuristische lokale Suche ist abhängig von der initialen Konfiguration und terminiert nur bedingt 
 mit einer globalen optimalen Lösung für das OPP. Um dem entgegenzuwirken, 
-wird die Heuristik zur \textit{Tabu-Suche} \cite{glover-tabu-search} erweitert. 
+wird die Heuristik zur \textit{Tabusuche} \cite{glover-tabu-search} erweitert. 
 In dieser Methode wird über mehrere Anfangskonfigurationen iteriert, die anhand der lokalen Suche nicht unmittelbar zu einer Verbesserung führen. 
 Durch diese Erweiterung werden Lösungen evaluiert, die bei einer lokalen Suche nicht betrachtet werden.
 
@@ -358,11 +377,11 @@ Sobald die Schleife terminiert ist, wird die neue beste Lösung $S^*$ mit der Au
 
 Mit dieser Heuristik wird der Lösungsraum nach besseren Approximationen des Optimums durchsucht. 
 Im Vergleich zur Greedy First-Fit \ref{greedy-first-fit} und der 
-lokalen Suche \ref{local-search} bietet die Tabu-Suche eine erweiterte Fähigkeit zur Exploration 
+lokalen Suche \ref{local-search} bietet die Tabusuche eine erweiterte Fähigkeit zur Exploration 
 des Lösungsraums und kann somit zu verbesserten Lösungen führen.
 
 
-% vgl greedy, greedy no delta, local search, tabu search tabelle aus paper
+
 \section{Evaluation}
 Die oben angeführten Heuristiken \ref{Heurisiken} werden in einem Experiment aus \cite{efficient-operator-placement} evaluiert. 
 Für das Experiment werden die drei Heuristiken Greedy First-Fit, Greedy First-Fit ohne Straffunktion und die lokale Suche verglichen. 
@@ -378,13 +397,13 @@ Diesbezüglich werden die Rechnerressourcen und deren Verbindungen definiert, so
 Die drei untersuchten Topologien sind in Abbildung \ref{topologies} dargestellt. Dabei werden einfache sequentielle, replizierte und Diamant-Topologien betrachtet. \\
 
 \noindent
-\begin{minipage}{0.45\textwidth}
-    \includegraphics[width=0.75\linewidth]{res/topologies.png}
+\begin{minipage}{0.5\textwidth}
+    \includegraphics[width=0.9\linewidth]{res/topologies.eps}
 \captionof{figure}{Sequentielle, replizierte und Diamant-Topologie, Quelle: \cite{efficient-operator-placement}. }
 \label{topologies}
 \end{minipage}
 \hspace{10pt}
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.45\textwidth}
     In den dargestellten Topologien hat jede Schicht mindestens einen Operator. 
     Die erste und letzte Schicht verfügen jeweils über einen Operator, die Quelle und das Becken. 
     Alle Ressourcentopologien haben die gleiche Anzahl an Ressourcen.
@@ -405,8 +424,6 @@ Wie in \ref{OPP-Definition} definiert, werden im Experiment Verfügbarkeit,
 Netzwerklatenz und Antwortzeit als QoS selektiert und folglich mit der Straffunktion minimiert. 
 
 
-% ODP definieren
-
 Die Berechnung der Optimallösung weist eine effiziente Laufzeit für Diamant-Topologien auf. 
 Diese Berechnung ist in unter einer Sekunde verfügbar. Bei replizierten und sequentiellen Topologien benötigt die Berechnung deutlich länger. 
 Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus Tabelle). \\
@@ -415,22 +432,22 @@ Für replizierte Topologien dauert die Evaluation mehr als 8 Stunden (=32193 aus
     \caption{Evaluation der Heuristiken}
     \begin{tabular}{llllll}
     \toprule
-    Methode                          &       & DA        & SA              & RA                & Durschnitt       \\
+    Methode                          &       & \textcolor{red}{Diamand}        & \textcolor{red}{Sequentiell}            & \textcolor{red}{Repliziert}                & Durchschnitt       \\
     \midrule
     ODP                              &LZ     &  0.1      & 41.4             & 915.2            &                  \\
                                      &LZ     &  0.8      & 2174.8           & 32193.9          &                  \\
     \cmidrule{1-5}
     Lokale Suche                     &BF     &  0.68     & 150.54           & 353.07           & 215.81           \\
                                      &QE     &0\%        & 1\%              &4\%               & 1\%              \\
-    Tabu Suche                       &BF     &  0.31     & 65.91            & 64.93            & 83.53            \\
+    Tabusuche                       &BF      &  0.31     & 65.91            & 64.93            & 83.53            \\
                                      &QE     &0\%        & 1\%              &4\%               & 1\%              \\           
     Greedy First-Fit                 &BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
                                      &QE     &0\%        & 7\%              &5\%               &11\%              \\
     Greedy First-Fit (keine $\delta$)&BF     &  454.40   & $56 \cdot 10^4$  & $12 \cdot 10^6$  & $11 \cdot 10^6$  \\
                                      &QE     &34\%       & 7\%              &24\%              & 19\%             \\
     \bottomrule
-    \multicolumn{4}{l}{\footnotesize Tabelle aus des Experiments \cite{efficient-operator-placement}, BF = Beschleunigungsfaktor,}\\
-    \multicolumn{4}{l}{\footnotesize QE = Leistungseinbuße, LZ = Laufzeit}\\
+    \multicolumn{5}{l}{\footnotesize Tabelle aus des Experiments \cite{efficient-operator-placement}, \textcolor{red}{Vergleich für dre Topologien (Diamand, Sequentiell, Repliziert)}}\\
+    \multicolumn{5}{l}{\footnotesize BF = Beschleunigungsfaktor, QE = Leistungseinbuße, LZ = Laufzeit}\\
     \end{tabular}
     \label{experiment-tabelle}
 \end{table} 
@@ -443,24 +460,25 @@ Auffällig ist die Diskrepanz zwischen der Greedy First-Fit Implementierung mit 
 Bei Beschleunigungsfaktoren ähnlicher Größenordnung resultieren die verschiedenen Implementierungen 
 in unterschiedlichen Qualitäten der Lösung, besonders bei Diamant- und replizierten Topologien.
 
-Lokale Suche ist im Experiment schneller als Tabu Suche, jedoch ist die Qualität der Lösung geringer. 
-Somit bietet die Tabu Suche die beste Operatorplatzierung, mit der längsten Laufzeit. 
+Lokale Suche ist im Experiment schneller als Tabusuche, jedoch ist die Qualität der Lösung geringer. 
+Somit bietet die Tabusuche die beste Operatorplatzierung, mit der längsten Laufzeit. 
 Trotzdem stellt sich die Berechnung als viel effizienter heraus als die optimale Lösung. 
-Während die Laufzeit der optimalen Lösung für replizierte Topologien mehr als 8 Stunden beträgt, benötigt die Tabu Suche 8,2 Minuten. 
+Während die Laufzeit der optimalen Lösung für replizierte Topologien mehr als 8 Stunden beträgt, benötigt die Tabus
+uche 8,2 Minuten. 
 Die lokale Suche findet in 1,5 Minuten eine Lösung. Dabei beträgt die Qualitätseinbuße bei beiden Methoden 1\%. 
-In der Degradation der Performance ist bei der lokalen und der Tabu Suche kein klarer Unterschied zu erkennen. 
+In der Degradation der Performance ist bei der lokalen und der Tabusuche kein klarer Unterschied zu erkennen. 
 
 Es gibt in diesem Experiment keinen Gewinner. Zwischen den Heuristiken gibt es Kompromisse zwischen Schnelligkeit und Genauigkeit. 
 
 \section{Konklusion und Ausblick}In dieser Arbeit wurden mehrere Heuristiken vorgestellt, die das NP-schwere Problem der Operatorplatzierung approximieren.
 Dabei handelt es sich um bekannte Methoden, die auch für andere NP-schwere Probleme genutzt werden. 
 Mittels einer Straffunktion wurden die Heuristiken auf QoS-Attribute optimiert.\\
-Die vorgestellten Heuristiken basieren auf dem Greedy First-Fit Ansatz und erweitern dessen Funktionalität durch Methoden wie lokale Suche und Tabu Suche. 
+Die vorgestellten Heuristiken basieren auf dem Greedy First-Fit Ansatz und erweitern dessen Funktionalität durch Methoden wie lokale Suche und Tabusuche. 
 Diese Heuristiken wurden in einem Experiment für drei verschiedene SVS-Architekturen evaluiert. 
 Bei der Evaluation wurden sowohl die Laufzeit als auch die Qualität der Lösungen betrachtet. 
 Es zeigte sich, dass keine der Heuristiken eine klare Überlegenheit aufweist. 
 Beispielsweise führte die Greedy First-Fit Heuristik zu schnellen, jedoch qualitativ minderwertigen Lösungen, 
-während die lokale Suche und die Tabu Suche qualitativ bessere Platzierungen erreichten, jedoch mehr Zeit benötigten. 
+während die lokale Suche und die Tabusuche qualitativ bessere Platzierungen erreichten, jedoch mehr Zeit benötigten. 
 Dennoch zeigten alle Heuristiken eine deutliche Verkürzung der Laufzeit im Vergleich zur Berechnung der optimalen Lösung.\\\\
 
 Zukünftig werden wir komplexere Heuristiken entwickeln, die das OPP-Problem noch besser approximieren können. 
@@ -468,31 +486,7 @@ Die vorgestellten Methoden wurden zur Kompilierzeit verwendet, was bei dynamisch
 Deshalb wollen wir uns auf Heuristiken fokussieren, die zur Laufzeit angepasst werden können.
 Zudem wollen wir die erneute Konfiguration während der Laufzeit analysieren, damit Big Data-Anwendungen auf verändernde Bedingungen reagieren können.
 
-
-\begin{table}[htbp]  
-    \centering
-    \caption{Evaluation der Heuristiken}
-    \begin{tabular}{llll}
-    \toprule
-    Methode                          &       & SA               & RA                \\
-    \midrule
-    ODP                              &LZ     & 2174.8           & 32193.9           \\
-    \cmidrule{1-4}
-    Greedy First-Fit                 &LZ     & 0.06             & 0.00005           \\
-                                     &QE     & 7\%              &5\%                \\
-    Greedy First-Fit (keine $\delta$)&LZ     & 0.057            & 0.00001           \\
-                                     &QE     & 7\%              &24\%               \\
-    Lokale Suche                     &LZ     & 213.9            &91.1               \\
-                                     &QE     & 1\%              &4\%                \\
-    Tabu Suche                       &LZ     & 493.1            & 495.8             \\
-                                     &QE     & 1\%              &4\%                \\           
-
-    \bottomrule
-    \multicolumn{4}{l}{\footnotesize QE = Qualitätseinbuße, LZ = Laufzeit (s)}\\
-    \end{tabular}
-
-\end{table} 
 \newpage
-\bibliography{biblio}
+\bibliography{main}
 
 \end{document} 
